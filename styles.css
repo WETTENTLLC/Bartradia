@@ -70,28 +70,17 @@ header {
     will-change: transform;
 }
 
-/* Advanced Navigation System */
-.nav-menu {
+/* Optimized navigation */
+.nav-bar {
     display: flex;
-    gap: var(--spacing-md);
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--spacing-md);
     
     @media (max-width: 768px) {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        height: 100vh;
-        width: 80%;
-        max-width: 400px;
-        background: var(--white);
         flex-direction: column;
-        padding: var(--spacing-lg);
-        transition: transform var(--transition-normal);
-        box-shadow: var(--shadow-lg);
-        z-index: 1000;
-        
-        &.active {
-            transform: translateX(-100%);
-        }
+        gap: var(--spacing-sm);
+    }
 }
 
 .nav-bar ul {
