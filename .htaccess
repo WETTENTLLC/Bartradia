@@ -1,0 +1,12 @@
+<IfModule mod_headers.c>
+  Header set Access-Control-Allow-Origin "*"
+</IfModule>
+<FilesMatch "\.(jpg|jpeg|png|gif)$">
+  Order allow,deny
+  Allow from all
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+  </IfModule>
+  

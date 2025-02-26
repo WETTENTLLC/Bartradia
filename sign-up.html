@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - One Man's Trash</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="hero-banner" role="banner">
+        <div class="nav-bar">
+            <nav role="navigation">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="user-dashboard.html">Account</a></li>
+                    <li><a href="trade.html">Trade Items</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for items..." id="searchInput">
+                <button id="searchButton">Search</button>
+            </div>
+            <div class="auth-buttons">
+                <button id="signInBtn" onclick="location.href='sign-in.html'">Sign In</button>
+                <button id="signUpBtn" onclick="location.href='sign-up.html'">Sign Up</button>
+            </div>
+        </div>
+    </header>
+
+    <main role="main">
+        <section class="floating-frame sign-up-frame">
+            <h2>Sign Up</h2>
+            <form id="signUpForm" action="submit-signup.html" method="POST" enctype="multipart/form-data" onsubmit="return displayConfirmation()">
+                <!-- Full Name Field -->
+                <div class="floating-frame section">
+                    <div class="form-group">
+                        <label for="fullName">Full Name:</label>
+                        <input type="text" id="fullName" name="fullName" required>
+                    </div>
+                </div>
+
+                <!-- ID Information Section -->
+                <div class="floating-frame section">
+                    <h3>ID Information</h3>
+                    <div class="form-group">
+                        <label for="idNumber">ID Number:</label>
+                        <input type="text" id="idNumber" name="idNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expDate">Expiration Date:</label>
+                        <input type="date" id="expDate" name="expDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth:</label>
+                        <input type="date" id="dob" name="dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="idPhoto">Upload ID Photo:</label>
+                        <input type="file" id="idPhoto" name="idPhoto" accept="image/*" required>
+                    </div>
+                </div>
+
+                <!-- Payment Information Section -->
+                <div class="floating-frame section">
+                    <h3>Payment Information</h3>
+                    <p style="text-align: center;">Your payment information is needed to cover possible shipping costs for trades and for profile upgrades. Rest assured, this information is secure and will not be shared with third parties.</p>
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number:</label>
+                        <input type="text" id="cardNumber" name="cardNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardExp">Expiration Date:</label>
+                        <input type="date" id="cardExp" name="cardExp" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardCVV">CVV:</label>
+                        <input type="text" id="cardCVV" name="cardCVV" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="billingAddress">Billing Address:</label>
+                        <input type="text" id="billingAddress" name="billingAddress" required>
+                    </div>
+                </div>
+
+                <!-- Disclaimer Section -->
+                <div class="floating-frame section">
+                    <h3>Disclaimer</h3>
+                    <div class="form-group">
+                        <textarea id="disclaimer" name="disclaimer" readonly style="text-align: center;">
+                            By signing up, you agree to the following terms and conditions:
+                            - All items must be described accurately. Any false descriptions will result in account termination.
+                            - You confirm that you are who you claim to be. You are over 18 or have an adult's permission to use this site.
+                            - One Man's Trash is not responsible or liable for items received or shipped; users are solely responsible.
+                            - You consent to item or service verification by One Man's Trash staff or affiliates.
+                            - You agree to follow all rules and guidelines of the site.
+                            - No trading of stolen items or offering services that you do not own or have the owner's permission to barter in writing.
+                            - Your personal data is protected and will not be shared with third parties without your consent.
+                            - In case of disputes, you agree to abide by our refund and dispute resolution policies.
+                            - Users are responsible for ensuring items are shipped securely and insurance is recommended for valuable items.
+                            - By signing up, you consent to identity verification processes as required by our platform.
+                            By clicking the agree button, you acknowledge that you have read and understood the disclaimer and agree to its terms.
+                        </textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="agreeName">Type your full name to sign:</label>
+                        <input type="text" id="agreeName" name="agreeName" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                        <label for="agreeTerms">I agree to the terms and conditions</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="cta-button">Sign Up</button>
+            </form>
+            <div id="confirmationMessage" style="display: none;">
+                <p>Your account information has been submitted and is under review. You will receive an email upon approval. In the meantime, feel free to browse the site. Please note that trading and bartering will be restricted until your account is verified. Thank you for joining One Man's Trash.</p>
+            </div>
+        </section>
+    </main>
+    <script>
+        function displayConfirmation() {
+            document.getElementById('signUpForm').style.display = 'none';
+            document.getElementById('confirmationMessage').style.display = 'block';
+            return false; // Prevent form submission for demo purposes
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-Up</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to Our Trading Platform</h1>
+    </header>
+    <main>
+        <section class="sign-up">
+            <h2>Create Your Account</h2>
+            <form id="signupForm" action="/signup" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Sign Up</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-Up</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to Our Trading Platform</h1>
+    </header>
+    <main>
+        <section class="sign-up">
+            <h2>Create Your Account</h2>
+            <form id="signupForm" action="/signup" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Sign Up</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
+
+<form id="signUpForm" action="submit-signup.html" method="POST" enctype="multipart/form-data" onsubmit="return displayConfirmation()" aria-labelledby="signUpFormTitle">
+    <h2 id="signUpFormTitle">Sign Up</h2>
+
+
+    <meta name="description" content="Sign up for One Man's Trash and start trading valuable items within your community.">
+<meta name="keywords" content="sign up, trading, community, valuable items, One Man's Trash">

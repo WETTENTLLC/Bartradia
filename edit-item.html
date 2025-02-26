@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Item</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Edit Item</h1>
+    </header>
+    <main>
+        <section class="edit-item">
+            <h2>Update Item Details</h2>
+            <form id="editItemForm" action="/update-item" method="POST">
+                <input type="hidden" id="itemId" name="id">
+                
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
+
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="electronics">Electronics</option>
+                    <option value="furniture">Furniture</option>
+                    <option value="clothing">Clothing</option>
+                </select>
+
+                <button type="submit">Update Item</button>
+            </form>
+        </section>
+    </main>
+    <script src="edit-item.js"></script>
+</body>
+</html>

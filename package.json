@@ -1,0 +1,27 @@
+{
+  "name": "one-mans-trash",
+  "version": "1.0.0",
+  "description": "A project for managing item trading and user resources",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "dotenv": "^8.6.0",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql": "^2.18.1",
+    "path": "^0.12.7",
+    "sqlite3": "^5.0.2"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "keywords": []
+}
