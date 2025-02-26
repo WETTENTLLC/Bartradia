@@ -362,6 +362,24 @@ document.addEventListener('DOMContentLoaded', () => {
         AnimationHandler.init();
         ResponsiveHandler.init();
 
+        // Initialize dynamic content loading
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal functionality
+            const modal = document.getElementById('aboutModal');
+            const closeButton = document.querySelector('.close-button');
+            
+            if (closeButton) {
+                closeButton.addEventListener('click', () => {
+                    modal.classList.add('hidden');
+                });
+            }
+
+            // Close modal when clicking outside
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.classList.add('hidden');
+                }
+
         // Load dynamic content
         FeaturedTradesHandler.loadFeaturedTrades();
 
