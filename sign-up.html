@@ -34,7 +34,8 @@
     <main role="main">
         <section class="floating-frame sign-up-frame" aria-labelledby="signUpTitle">
             <h2 id="signUpTitle">Sign Up</h2>
-            <form id="signUpForm" action="submit-signup.html" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <!-- Update the form tag -->
+            <form id="signUpForm" action="/api/signup" method="POST" enctype="multipart/form-data" onsubmit="return handleSubmit(event)">
                 <!-- Full Name Field -->
                 <div class="floating-frame section">
                     <div class="form-group">
