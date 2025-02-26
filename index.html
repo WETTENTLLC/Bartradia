@@ -48,6 +48,14 @@
                 <p>Discover more about Bartradia and its affiliation with Wett Enterprises.</p>
                 <a href="comprehensive_description.html" target="_blank">Read More</a>
             </div>
+            <!-- Add error message container -->
+            <div id="errorContainer" class="error-container hidden"></div>
+
+            <!-- Add loading indicator -->
+            <div id="loadingIndicator" class="loading-indicator hidden">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+            </div>
         </section>
 
         <section class="featured-trades frame">
@@ -155,6 +163,28 @@
 </body>
 </html>
 
+// Initialize dynamic content loading
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal functionality
+            const modal = document.getElementById('aboutModal');
+            const closeButton = document.querySelector('.close-button');
+            
+            if (closeButton) {
+                closeButton.addEventListener('click', () => {
+                    modal.classList.add('hidden');
+                });
+            }
+
+            // Close modal when clicking outside
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+
+
 <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -169,6 +199,5 @@
       ]
     }
     </script>
-    
-
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline';">
+</body>
+</html>
