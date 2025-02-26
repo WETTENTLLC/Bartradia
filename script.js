@@ -411,3 +411,219 @@ window.Bartradia = {
     error: ErrorHandler
 };
 
+db.serialize(() => {
+    db.run(`CREATE TABLE trades (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        description TEXT NOT NULL,
+        category TEXT NOT NULL,
+        image TEXT NOT NULL,
+        city TEXT,
+        status TEXT DEFAULT 'pending',
+        featured BOOLEAN DEFAULT 0,
+        views INTEGER DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        user_id INTEGER,
+        favorite_count INTEGER DEFAULT 0
+    )`);
+});
+
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+
+// Set up file upload
+const storage = multer.diskStorage({
+    destination: './public/uploads/',
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+const upload = multer({ storage: storage });
+
+// Post new item endpoint
+app.post('/api/post-item', upload.single('image'), (req, res) => {
+    const { title, description, category, city } = req.body;
+    const image = `/uploads/${req.file.filename}`;
+    
+    db.run(
+        `INSERT INTO trades (title, description, category, image, city) 
+         VALUES (?, ?, ?, ?, ?)`,
+        [title, description, category, image, city],
+        function(err) {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ 
+                success: true, 
+                id: this.lastID,
+                message: 'Item posted successfully and pending review'
+            });
+        }
+    );
+});
+
+// Get trade items with filtering
+app.get('/api/trades', (req, res) => {
+    const { city, category, itemType } = req.query;
+    let query = "SELECT * FROM trades WHERE status = 'approved'";
+    const params = [];
+
+    if (city) {
+        query += " AND city LIKE ?";
+        params.push(`%${city}%`);
+    }
+    if (category && category !== 'all') {
+        query += " AND category = ?";
+        params.push(category);
+    }
+    if (itemType) {
+        query += " AND title LIKE ?";
+        params.push(`%${itemType}%`);
+    }
+
+    query += " ORDER BY created_at DESC";
+
+    db.all(query, params, (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ trades: rows });
+    });
+});
+
+// Favorite items endpoints
+app.post('/api/favorites/:tradeId', (req, res) => {
+    const { tradeId } = req.params;
+    const userId = req.user.id; // Assuming user authentication is implemented
+
+    db.run(
+        `INSERT INTO favorites (user_id, trade_id) VALUES (?, ?)`,
+        [userId, tradeId],
+        function(err) {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ success: true });
+        }
+    );
+});
+
+// Get favorite items
+app.get('/api/favorites', (req, res) => {
+    const userId = req.user.id; // Assuming user authentication is implemented
+
+    db.all(
+        `SELECT t.* FROM trades t
+         JOIN favorites f ON t.id = f.trade_id
+         WHERE f.user_id = ?`,
+        [userId],
+        (err, rows) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ favorites: rows });
+        }
+    );
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Handle search form submission
+    const searchForm = document.querySelector('.search-filter form');
+    searchForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const city = document.getElementById('city').value;
+        const itemType = document.getElementById('item-type').value;
+        const category = document.getElementById('category').value;
+
+        const response = await fetch(`/api/trades?city=${city}&itemType=${itemType}&category=${category}`);
+        const data = await response.json();
+        updateTradeItems(data.trades);
+    });
+
+    // Handle post item form submission
+    const postItemForm = document.getElementById('postItemForm');
+    postItemForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(postItemForm);
+
+        try {
+            const response = await fetch('/api/post-item', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert('Item posted successfully!');
+                postItemForm.reset();
+            }
+        } catch (error) {
+            console.error('Error posting item:', error);
+            alert('Error posting item. Please try again.');
+        }
+    });
+
+    // Load and display trade items
+    async function loadTradeItems() {
+        try {
+            const response = await fetch('/api/trades');
+            const data = await response.json();
+            updateTradeItems(data.trades);
+        } catch (error) {
+            console.error('Error loading trades:', error);
+        }
+    }
+
+    // Update trade items display
+    function updateTradeItems(trades) {
+        const container = document.querySelector('.trade-items .scrollable-list');
+        if (!container) return;
+
+        container.innerHTML = trades.map(trade => `
+            <div class="trade-item" data-category="${trade.category}">
+                <img src="${trade.image}" alt="${trade.title}">
+                <h3>${trade.title}</h3>
+                <p>${trade.description}</p>
+                <button onclick="addToFavorites(${trade.id})">Add to Favorites</button>
+            </div>
+        `).join('');
+    }
+
+    // Load favorite items
+    async function loadFavorites() {
+        try {
+            const response = await fetch('/api/favorites');
+            const data = await response.json();
+            updateFavoriteItems(data.favorites);
+        } catch (error) {
+            console.error('Error loading favorites:', error);
+        }
+    }
+
+    // Update favorite items display
+    function updateFavoriteItems(favorites) {
+        const container = document.querySelector('.favorite-items .scrollable-list');
+        if (!container) return;
+
+        container.innerHTML = favorites.map(item => `
+            <div class="favorite-item">
+                <img src="${item.image}" alt="${item.title}">
+                <h3>${item.title}</h3>
+                <p>${item.description}</p>
+            </div>
+        `).join('');
+    }
+
+    // Initial load
+    loadTradeItems();
+    loadFavorites();
+});
+
+// Add to favorites function
+async function addToFavorites(tradeId) {
+    try {
+        const response = await fetch(`/api/favorites/${tradeId}`, {
+            method: 'POST'
+        });
+        const data = await response.json();
+        if (data.success) {
+            alert('Added to favorites!');
+            loadFavorites();
+        }
+    } catch (error) {
+        console.error('Error adding to favorites:', error);
+        alert('Error adding to favorites. Please try again.');
+    }
+}
