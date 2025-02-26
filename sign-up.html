@@ -10,89 +10,136 @@
 </head>
 <body>
     <header class="hero-banner" role="banner">
-        <!-- Navigation remains the same -->
+        <div class="nav-bar">
+            <nav role="navigation" aria-label="Main navigation">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="user-dashboard.html">Account</a></li>
+                    <li><a href="trade.html">Trade Items</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="search-bar" role="search">
+                <label for="searchInput" class="visually-hidden">Search items</label>
+                <input type="text" placeholder="Search for items..." id="searchInput" aria-label="Search for items">
+                <button id="searchButton" aria-label="Submit search">Search</button>
+            </div>
+            <div class="auth-buttons">
+                <button id="signInBtn" onclick="location.href='sign-in.html'">Sign In</button>
+                <button id="signUpBtn" onclick="location.href='sign-up.html'">Sign Up</button>
+            </div>
+        </div>
     </header>
 
     <main role="main">
         <section class="floating-frame sign-up-frame" aria-labelledby="signUpTitle">
             <h2 id="signUpTitle">Sign Up</h2>
-            <form id="signUpForm" action="submit-signup.html" method="POST" enctype="multipart/form-data" onsubmit="return validateAndSubmit()" novalidate>
-                <!-- Personal Information -->
-                <fieldset>
-                    <legend>Personal Information</legend>
+            <form id="signUpForm" action="submit-signup.html" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                <!-- Full Name Field -->
+                <div class="floating-frame section">
                     <div class="form-group">
-                        <label for="fullName">Full Name <span class="required" aria-label="required">*</span></label>
-                        <input type="text" id="fullName" name="fullName" required 
-                               aria-required="true" aria-describedby="fullNameError">
+                        <label for="fullName">Full Name: <span class="required" aria-label="required">*</span></label>
+                        <input type="text" id="fullName" name="fullName" required aria-required="true" 
+                               pattern="[A-Za-z\s]+" title="Please enter a valid name (letters and spaces only)">
                         <span id="fullNameError" class="error-message" role="alert"></span>
                     </div>
-                </fieldset>
+                </div>
 
-                <!-- ID Information -->
-                <fieldset>
-                    <legend>ID Information</legend>
+                <!-- ID Information Section -->
+                <div class="floating-frame section">
+                    <h3>ID Information</h3>
                     <div class="form-group">
-                        <label for="idNumber">ID Number <span class="required" aria-label="required">*</span></label>
-                        <input type="text" id="idNumber" name="idNumber" required 
-                               aria-required="true" aria-describedby="idNumberError"
+                        <label for="idNumber">ID Number: <span class="required" aria-label="required">*</span></label>
+                        <input type="text" id="idNumber" name="idNumber" required aria-required="true"
                                pattern="[A-Za-z0-9]+" title="Alphanumeric characters only">
                         <span id="idNumberError" class="error-message" role="alert"></span>
                     </div>
-                    <!-- Other ID fields with similar improvements -->
-                </fieldset>
-
-                <!-- Payment Information -->
-                <fieldset>
-                    <legend>Payment Information</legend>
                     <div class="form-group">
-                        <label for="cardNumber">Card Number <span class="required" aria-label="required">*</span></label>
-                        <input type="text" id="cardNumber" name="cardNumber" required 
-                               aria-required="true" aria-describedby="cardNumberError"
-                               pattern="[0-9]{16}" maxlength="16">
+                        <label for="expDate">Expiration Date: <span class="required" aria-label="required">*</span></label>
+                        <input type="date" id="expDate" name="expDate" required aria-required="true"
+                               min="2025-02-26">
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth: <span class="required" aria-label="required">*</span></label>
+                        <input type="date" id="dob" name="dob" required aria-required="true"
+                               max="2007-02-26">
+                    </div>
+                    <div class="form-group">
+                        <label for="idPhoto">Upload ID Photo: <span class="required" aria-label="required">*</span></label>
+                        <input type="file" id="idPhoto" name="idPhoto" accept="image/*" required aria-required="true"
+                               aria-describedby="photoHint">
+                        <span id="photoHint" class="hint-text">Accepted formats: JPG, PNG, GIF (Max 5MB)</span>
+                    </div>
+                </div>
+
+                <!-- Payment Information Section -->
+                <div class="floating-frame section">
+                    <h3>Payment Information</h3>
+                    <p class="info-text" role="note">Your payment information is needed to cover possible shipping costs for trades and for profile upgrades. Rest assured, this information is secure and will not be shared with third parties.</p>
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number: <span class="required" aria-label="required">*</span></label>
+                        <input type="text" id="cardNumber" name="cardNumber" required aria-required="true"
+                               pattern="[0-9]{16}" maxlength="16" autocomplete="cc-number">
                         <span id="cardNumberError" class="error-message" role="alert"></span>
                     </div>
-                    <!-- Other payment fields with similar improvements -->
-                </fieldset>
+                    <!-- Rest of your payment fields with similar improvements -->
+                </div>
 
-                <!-- Disclaimer -->
-                <fieldset>
-                    <legend>Terms and Conditions</legend>
+                <!-- Disclaimer Section -->
+                <div class="floating-frame section">
+                    <h3>Disclaimer</h3>
                     <div class="form-group">
-                        <div id="disclaimerText" class="disclaimer" tabindex="0">
-                            <!-- Disclaimer text -->
+                        <div class="disclaimer-container" tabindex="0" role="region" aria-label="Terms and conditions">
+                            <textarea id="disclaimer" name="disclaimer" readonly aria-readonly="true">
+                                <!-- Your existing disclaimer text -->
+                            </textarea>
                         </div>
                         <div class="agreement-section">
-                            <label for="agreeName">Type your full name to sign <span class="required" aria-label="required">*</span></label>
-                            <input type="text" id="agreeName" name="agreeName" required 
-                                   aria-required="true" aria-describedby="agreeNameError">
-                            <span id="agreeNameError" class="error-message" role="alert"></span>
+                            <label for="agreeName">Type your full name to sign: <span class="required" aria-label="required">*</span></label>
+                            <input type="text" id="agreeName" name="agreeName" required aria-required="true">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="agreeTerms" name="agreeTerms" required aria-required="true">
+                                <label for="agreeTerms">I agree to the terms and conditions</label>
+                            </div>
                         </div>
                     </div>
-                </fieldset>
+                </div>
 
-                <button type="submit" class="cta-button">Create Account</button>
+                <button type="submit" class="cta-button">Sign Up</button>
             </form>
-
-            <div id="confirmationMessage" class="hidden" role="alert" aria-live="polite">
-                <!-- Confirmation message content -->
+            <div id="confirmationMessage" style="display: none;" role="alert" aria-live="polite">
+                <p>Your account information has been submitted and is under review. You will receive an email upon approval. In the meantime, feel free to browse the site. Please note that trading and bartering will be restricted until your account is verified. Thank you for joining One Man's Trash.</p>
             </div>
         </section>
     </main>
 
     <script>
-        function validateAndSubmit() {
-            // Add client-side validation here
+        function validateForm() {
             const form = document.getElementById('signUpForm');
-            if (form.checkValidity()) {
-                displayConfirmation();
-                return false;
+            let isValid = true;
+
+            // Clear previous error messages
+            document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+
+            // Validate full name
+            const fullName = document.getElementById('fullName');
+            if (!fullName.value.match(/^[A-Za-z\s]+$/)) {
+                document.getElementById('fullNameError').textContent = 'Please enter a valid name';
+                isValid = false;
+            }
+
+            // Add more validation as needed
+
+            if (isValid) {
+                return displayConfirmation();
             }
             return false;
         }
 
         function displayConfirmation() {
-            document.getElementById('signUpForm').classList.add('hidden');
-            document.getElementById('confirmationMessage').classList.remove('hidden');
+            document.getElementById('signUpForm').style.display = 'none';
+            document.getElementById('confirmationMessage').style.display = 'block';
+            return false;
         }
     </script>
 </body>
