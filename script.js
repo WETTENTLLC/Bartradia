@@ -1,359 +1,320 @@
 /**
- * CONFIGURATION AND GLOBAL VARIABLES
+ * CONFIGURATION AND CONSTANTS
  */
 const CONFIG = {
-    API_BASE_URL: '/api',
-    MAX_FILE_SIZE: 5242880, // 5MB
-    ALLOWED_FILE_TYPES: ['image/jpeg', 'image/png', 'image/gif'],
-    PASSWORD_MIN_LENGTH: 8,
-    RATE_LIMIT: {
-        windowMs: 15 * 60 * 1000,
-        maxRequests: 100
-    },
+    API_BASE_URL: 'https://api.bartradia.com',
+    IMAGE_PATH: 'Public/images/',
+    FALLBACK_IMAGE: 'images/fallback.png',
     ERROR_MESSAGES: {
-        NETWORK_ERROR: 'Network error occurred. Please try again.',
-        INVALID_FILE: 'Invalid file type or size.',
-        INVALID_INPUT: 'Please provide valid input.',
-        UNAUTHORIZED: 'You are not authorized to perform this action.'
+        INVALID_FILE: 'Invalid file type or size',
+        NETWORK_ERROR: 'Network connection error',
+        AUTH_ERROR: 'Authentication failed'
     }
 };
 
 /**
- * SECURITY AND VALIDATION UTILITIES
- */
-const SecurityUtils = {
-    validatePassword: (password) => {
-        const requirements = {
-            length: password.length >= CONFIG.PASSWORD_MIN_LENGTH,
-            number: /\d/.test(password),
-            special: /[!@#$%^&*]/.test(password),
-            upper: /[A-Z]/.test(password),
-            lower: /[a-z]/.test(password)
-        };
-        return Object.values(requirements).every(req => req === true);
-    },
-
-    sanitizeInput: (input) => {
-        if (typeof input !== 'string') return '';
-        return input.replace(/<[^>]*>/g, '').trim();
-    },
-
-    validateFileUpload: (file) => {
-        return file && 
-               file.size <= CONFIG.MAX_FILE_SIZE && 
-               CONFIG.ALLOWED_FILE_TYPES.includes(file.type);
-    },
-
-    validateEmail: (email) => {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    }
-};
-
-/**
- * ERROR HANDLING UTILITIES
- */
-const ErrorHandler = {
-    showError: (message, elementId = 'error-message') => {
-        const errorElement = document.getElementById(elementId);
-        if (errorElement) {
-            errorElement.textContent = message;
-            errorElement.style.display = 'block';
-            setTimeout(() => {
-                errorElement.style.display = 'none';
-            }, 5000);
-        } else {
-            console.error(message);
-        }
-    },
-
-    handleFetchError: (error) => {
-        console.error('API Error:', error);
-        ErrorHandler.showError(CONFIG.ERROR_MESSAGES.NETWORK_ERROR);
-    }
-};
-
-/**
- * RATE LIMITER
- */
-class RateLimiter {
-    constructor() {
-        this.requests = new Map();
-        this.windowMs = CONFIG.RATE_LIMIT.windowMs;
-        this.maxRequests = CONFIG.RATE_LIMIT.maxRequests;
-    }
-
-    checkLimit(userId) {
-        const now = Date.now();
-        const userRequests = this.requests.get(userId) || [];
-        const validRequests = userRequests.filter(time => now - time < this.windowMs);
-        
-        if (validRequests.length >= this.maxRequests) {
-            return false;
-        }
-
-        validRequests.push(now);
-        this.requests.set(userId, validRequests);
-        return true;
-    }
-}
-
-const rateLimiter = new RateLimiter();
-/**
- * TRADE ITEMS MANAGEMENT
- */
-const TradeManager = {
-    async displayTrades() {
-        try {
-            const response = await fetch(`${CONFIG.API_BASE_URL}/trades`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            
-            if (!response.ok) throw new Error('Failed to fetch trades');
-            
-            const data = await response.json();
-            const tradeList = document.getElementById('tradeList');
-            
-            if (!tradeList) return;
-
-            tradeList.innerHTML = data.trades.map(trade => `
-                <div class="trade-item" data-id="${SecurityUtils.sanitizeInput(trade.id)}">
-                    <img src="${SecurityUtils.sanitizeInput(trade.image)}" 
-                         alt="${SecurityUtils.sanitizeInput(trade.name)}" 
-                         class="trade-image" 
-                         onerror="this.src='images/fallback.png'">
-                    <strong>${SecurityUtils.sanitizeInput(trade.name)}</strong>
-                    <p>${SecurityUtils.sanitizeInput(trade.description)}</p>
-                    <div class="trade-actions">
-                        <button class="edit-btn" data-id="${trade.id}">Edit</button>
-                        <button class="delete-btn" data-id="${trade.id}">Delete</button>
-                    </div>
-                </div>
-            `).join('');
-            
-            this.attachEventListeners();
-        } catch (error) {
-            ErrorHandler.handleFetchError(error);
-        }
-    },
-
-    async createTrade(formData) {
-        try {
-            if (!rateLimiter.checkLimit('user')) {
-                throw new Error('Rate limit exceeded');
-            }
-
-            const response = await fetch(`${CONFIG.API_BASE_URL}/trades`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: formData
-            });
-
-            if (!response.ok) throw new Error('Failed to create trade');
-            
-            const result = await response.json();
-            await this.displayTrades();
-            return result;
-        } catch (error) {
-            ErrorHandler.handleFetchError(error);
-            return null;
-        }
-    },
-
-    async updateTrade(id, data) {
-        try {
-            if (!rateLimiter.checkLimit('user')) {
-                throw new Error('Rate limit exceeded');
-            }
-
-            const response = await fetch(`${CONFIG.API_BASE_URL}/trades/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify(data)
-            });
-
-            if (!response.ok) throw new Error('Failed to update trade');
-            
-            const result = await response.json();
-            await this.displayTrades();
-            return result;
-        } catch (error) {
-            ErrorHandler.handleFetchError(error);
-            return null;
-        }
-    },
-
-    async deleteTrade(id) {
-        try {
-            if (!rateLimiter.checkLimit('user')) {
-                throw new Error('Rate limit exceeded');
-            }
-
-            const response = await fetch(`${CONFIG.API_BASE_URL}/trades/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-
-            if (!response.ok) throw new Error('Failed to delete trade');
-            
-            await this.displayTrades();
-            return true;
-        } catch (error) {
-            ErrorHandler.handleFetchError(error);
-            return false;
-        }
-    },
-    attachEventListeners() {
-        // Edit buttons
-        document.querySelectorAll('.edit-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const tradeId = e.target.dataset.id;
-                this.handleEdit(tradeId);
-            });
-        });
-
-        // Delete buttons
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', async (e) => {
-                if (confirm('Are you sure you want to delete this trade?')) {
-                    const tradeId = e.target.dataset.id;
-                    await this.deleteTrade(tradeId);
-                }
-            });
-        });
-    },
-
-    handleEdit(tradeId) {
-        const tradeItem = document.querySelector(`.trade-item[data-id="${tradeId}"]`);
-        const name = tradeItem.querySelector('strong').textContent;
-        const description = tradeItem.querySelector('p').textContent;
-
-        document.getElementById('editTradeId').value = tradeId;
-        document.getElementById('editName').value = name;
-        document.getElementById('editDescription').value = description;
-        
-        document.getElementById('editModal').style.display = 'block';
-    }
-};
-
-/**
- * FORM HANDLING AND VALIDATION
- */
-const FormHandler = {
-    validateTradeForm(formData) {
-        const name = formData.get('name');
-        const description = formData.get('description');
-        const image = formData.get('image');
-
-        if (!name || name.length < 2) {
-            ErrorHandler.showError('Name must be at least 2 characters long');
-            return false;
-        }
-
-        if (!description || description.length < 10) {
-            ErrorHandler.showError('Description must be at least 10 characters long');
-            return false;
-        }
-
-        if (image && !SecurityUtils.validateFileUpload(image)) {
-            ErrorHandler.showError(CONFIG.ERROR_MESSAGES.INVALID_FILE);
-            return false;
-        }
-
-        return true;
-    },
-
-    setupFormListeners() {
-        const tradeForm = document.getElementById('tradeForm');
-        const editForm = document.getElementById('editForm');
-        const closeModal = document.querySelector('.close-modal');
-
-        if (tradeForm) {
-            tradeForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const formData = new FormData(tradeForm);
-                
-                if (this.validateTradeForm(formData)) {
-                    await TradeManager.createTrade(formData);
-                    tradeForm.reset();
-                }
-            });
-        }
-
-        if (editForm) {
-            editForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const tradeId = document.getElementById('editTradeId').value;
-                const formData = new FormData(editForm);
-                const data = Object.fromEntries(formData.entries());
-                
-                if (this.validateTradeForm(formData)) {
-                    await TradeManager.updateTrade(tradeId, data);
-                    document.getElementById('editModal').style.display = 'none';
-                }
-            });
-        }
-
-        if (closeModal) {
-            closeModal.addEventListener('click', () => {
-                document.getElementById('editModal').style.display = 'none';
-            });
-        }
-    }
-};
-
-/**
- * AUTHENTICATION HANDLING
+ * AUTH HANDLER
  */
 const AuthHandler = {
-    async login(credentials) {
-        try {
-            const response = await fetch(`${CONFIG.API_BASE_URL}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(credentials)
-            });
+    isAuthenticated: false,
 
-            if (!response.ok) throw new Error('Login failed');
+    init() {
+        this.updateAuthUI();
+        this.setupAuthListeners();
+    },
 
-            const data = await response.json();
-            localStorage.setItem('token', data.token);
-            return true;
-        } catch (error) {
-            ErrorHandler.handleFetchError(error);
-            return false;
+    updateAuthUI() {
+        const authButtons = document.querySelector('.auth-buttons');
+        const isAuthenticated = this.checkAuth();
+
+        if (authButtons) {
+            if (isAuthenticated) {
+                authButtons.innerHTML = `
+                    <button id="dashboardBtn" onclick="location.href='user-dashboard.html'">Dashboard</button>
+                    <button id="logoutBtn">Logout</button>
+                `;
+            } else {
+                authButtons.innerHTML = `
+                    <button id="signInBtn" onclick="location.href='sign-in.html'">Sign In</button>
+                    <button id="signUpBtn" onclick="location.href='sign-up.html'">Sign Up</button>
+                `;
+            }
         }
     },
 
-    logout() {
-        localStorage.removeItem('token');
-        window.location.href = '/login.html';
+    setupAuthListeners() {
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => this.logout());
+        }
     },
 
     checkAuth() {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            window.location.href = '/login.html';
-            return false;
-        }
-        return true;
+        const token = localStorage.getItem('authToken');
+        this.isAuthenticated = !!token;
+        return this.isAuthenticated;
+    },
+
+    logout() {
+        localStorage.removeItem('authToken');
+        this.isAuthenticated = false;
+        this.updateAuthUI();
+        window.location.href = 'index.html';
     }
 };
+
 /**
- * UTILITY FUNCTIONS
+ * FEATURED TRADES HANDLER
  */
-const Utils = {
+const FeaturedTradesHandler = {
+    async loadFeaturedTrades() {
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/featured-trades`);
+            const trades = await response.json();
+            this.updateFeaturedTrades(trades);
+        } catch (error) {
+            console.error('Error loading featured trades:', error);
+            this.loadFallbackTrades();
+        }
+    },
+
+    updateFeaturedTrades(trades) {
+        const container = document.querySelector('.grid-container');
+        if (!container) return;
+
+        trades.forEach((trade, index) => {
+            const tradeElement = container.children[index];
+            if (tradeElement) {
+                const img = tradeElement.querySelector('img');
+                const details = tradeElement.querySelector('.item-details');
+                
+                img.src = trade.imageUrl || `${CONFIG.IMAGE_PATH}item${index + 1}.png`;
+                img.onerror = () => {
+                    img.src = CONFIG.FALLBACK_IMAGE;
+                };
+
+                if (details) {
+                    details.innerHTML = `
+                        <p><strong>Item:</strong> ${SecurityUtils.sanitizeHTML(trade.name)}</p>
+                        <p><strong>Description:</strong> ${SecurityUtils.sanitizeHTML(trade.description)}</p>
+                        <p><strong>Value:</strong> $${trade.value}</p>
+                        <p><strong>User:</strong> ${SecurityUtils.sanitizeHTML(trade.user)}</p>
+                        <p><strong>Location:</strong> ${SecurityUtils.sanitizeHTML(trade.location)}</p>
+                    `;
+                }
+            }
+        });
+    },
+
+    loadFallbackTrades() {
+        // Keep existing static content as fallback
+        console.log('Using fallback trade data');
+    }
+};
+
+/**
+ * MODAL HANDLER
+ */
+const ModalHandler = {
+    init() {
+        this.setupModalListeners();
+    },
+
+    setupModalListeners() {
+        const aboutSection = document.querySelector('.about');
+        const aboutModal = document.getElementById('aboutModal');
+
+        if (aboutSection && aboutModal) {
+            aboutSection.addEventListener('mouseenter', () => {
+                aboutModal.classList.remove('hidden');
+            });
+
+            aboutSection.addEventListener('mouseleave', () => {
+                aboutModal.classList.add('hidden');
+            });
+        }
+    }
+};
+
+/**
+ * IMAGE HANDLER
+ */
+const ImageHandler = {
+    init() {
+        this.setupImageFallbacks();
+    },
+
+    setupImageFallbacks() {
+        const images = document.querySelectorAll('img');
+        images.forEach(img => {
+            if (!img.hasAttribute('onerror')) {
+                img.onerror = function() {
+                    const section = this.closest('section');
+                    let fallbackImage = 'images/fallback.png';
+                    
+                    if (section) {
+                        switch(section.className.split(' ')[0]) {
+                            case 'about':
+                                fallbackImage = 'images/fallback4.png';
+                                break;
+                            case 'how-it-works':
+                                fallbackImage = 'images/fallback5.png';
+                                break;
+                            case 'user-badges':
+                                fallbackImage = 'images/fallback3.png';
+                                break;
+                        }
+                    }
+                    
+                    this.src = fallbackImage;
+                    this.alt = 'Fallback Image';
+                };
+            }
+        });
+    }
+};
+
+/**
+ * ANIMATION HANDLER
+ */
+const AnimationHandler = {
+    init() {
+        this.setupScrollAnimations();
+        this.setupHoverEffects();
+    },
+
+    setupScrollAnimations() {
+        const sections = document.querySelectorAll('section');
+        
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px'
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    entry.target.classList.add('slide-up');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            section.classList.add('hidden');
+            sectionObserver.observe(section);
+        });
+    },
+
+    setupHoverEffects() {
+        const frames = document.querySelectorAll('.frame');
+        
+        frames.forEach(frame => {
+            frame.addEventListener('mouseenter', () => {
+                frame.classList.add('frame-hover');
+            });
+            
+            frame.addEventListener('mouseleave', () => {
+                frame.classList.remove('frame-hover');
+            });
+        });
+    }
+};
+
+/**
+ * SECURITY UTILS
+ */
+const SecurityUtils = {
+    sanitizeHTML(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    },
+
+    validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    },
+
+    validatePassword(password) {
+        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+        return passwordRegex.test(password);
+    }
+};
+
+/**
+ * ERROR HANDLER
+ */
+const ErrorHandler = {
+    showError(message, duration = 5000) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = message;
+        
+        document.body.appendChild(errorDiv);
+        
+        setTimeout(() => {
+            errorDiv.remove();
+        }, duration);
+    }
+};
+
+/**
+ * PERFORMANCE MONITOR
+ */
+const PerformanceMonitor = {
+    metrics: {},
+
+    startTimer(label) {
+        this.metrics[label] = performance.now();
+    },
+
+    endTimer(label) {
+        if (this.metrics[label]) {
+            const duration = performance.now() - this.metrics[label];
+            console.debug(`${label}: ${duration.toFixed(2)}ms`);
+            delete this.metrics[label];
+        }
+    },
+
+    logPageLoadMetrics() {
+        window.addEventListener('load', () => {
+            const timing = window.performance.timing;
+            const pageLoad = timing.loadEventEnd - timing.navigationStart;
+            console.debug(`Total page load time: ${pageLoad}ms`);
+        });
+    }
+};
+
+/**
+ * RESPONSIVE HANDLER
+ */
+const ResponsiveHandler = {
+    init() {
+        this.setupResponsiveListeners();
+        this.handleResize();
+    },
+
+    setupResponsiveListeners() {
+        window.addEventListener('resize', this.debounce(() => {
+            this.handleResize();
+        }, 250));
+    },
+
+    handleResize() {
+        const isMobile = window.innerWidth <= 768;
+        document.body.classList.toggle('mobile-view', isMobile);
+        this.adjustLayoutForScreenSize();
+    },
+
+    adjustLayoutForScreenSize() {
+        const gridContainer = document.querySelector('.grid-container');
+        if (gridContainer) {
+            const isMobile = window.innerWidth <= 768;
+            gridContainer.style.gridTemplateColumns = isMobile ? '1fr' : 'repeat(auto-fit, minmax(250px, 1fr))';
+        }
+    },
+
     debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -364,120 +325,71 @@ const Utils = {
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };
-    },
-
-    formatDate(date) {
-        return new Intl.DateTimeFormat('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        }).format(new Date(date));
-    },
-
-    createLoadingSpinner() {
-        const spinner = document.createElement('div');
-        spinner.className = 'loading-spinner';
-        spinner.innerHTML = '<div class="spinner"></div>';
-        return spinner;
-    },
-
-    showLoading() {
-        const spinner = this.createLoadingSpinner();
-        document.body.appendChild(spinner);
-    },
-
-    hideLoading() {
-        const spinner = document.querySelector('.loading-spinner');
-        if (spinner) {
-            spinner.remove();
-        }
     }
 };
 
 /**
- * APPLICATION INITIALIZATION
+ * URL HANDLER
  */
-const App = {
-    init() {
-        // Initialize rate limiter
-        const rateLimiter = new RateLimiter();
-
-        // Check authentication on protected pages
-        if (window.location.pathname !== '/login.html') {
-            if (!AuthHandler.checkAuth()) return;
+const URLHandler = {
+    getQueryParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const params = {};
+        for (const [key, value] of urlParams) {
+            params[key] = value;
         }
+        return params;
+    },
 
-        // Setup event listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            FormHandler.setupFormListeners();
-            
-            // Initialize trades display if on main page
-            if (document.getElementById('tradeList')) {
-                TradeManager.displayTrades();
-            }
-
-            // Setup logout button
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', AuthHandler.logout);
-            }
-
-            // Setup login form
-            const loginForm = document.getElementById('loginForm');
-            if (loginForm) {
-                loginForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const formData = new FormData(loginForm);
-                    const credentials = {
-                        email: formData.get('email'),
-                        password: formData.get('password')
-                    };
-
-                    if (!SecurityUtils.validateEmail(credentials.email)) {
-                        ErrorHandler.showError('Please enter a valid email address');
-                        return;
-                    }
-
-                    if (!SecurityUtils.validatePassword(credentials.password)) {
-                        ErrorHandler.showError('Password must be at least 8 characters long and contain numbers, special characters, and both upper and lowercase letters');
-                        return;
-                    }
-
-                    Utils.showLoading();
-                    const success = await AuthHandler.login(credentials);
-                    Utils.hideLoading();
-
-                    if (success) {
-                        window.location.href = '/dashboard.html';
-                    }
-                });
-            }
-        });
-
-        // Handle network status
-        window.addEventListener('online', () => {
-            ErrorHandler.showError('Connection restored', 'network-status');
-        });
-
-        window.addEventListener('offline', () => {
-            ErrorHandler.showError('No internet connection', 'network-status');
-        });
+    updateQueryParam(key, value) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set(key, value);
+        window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
     }
 };
 
-// Initialize the application
-App.init();
+/**
+ * INITIALIZATION
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    PerformanceMonitor.startTimer('init');
 
-// Export modules for testing (if using modules)
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        TradeManager,
-        FormHandler,
-        AuthHandler,
-        SecurityUtils,
-        ErrorHandler,
-        Utils
-    };
-}
+    try {
+        // Initialize all handlers
+        AuthHandler.init();
+        ModalHandler.init();
+        ImageHandler.init();
+        AnimationHandler.init();
+        ResponsiveHandler.init();
+
+        // Load dynamic content
+        FeaturedTradesHandler.loadFeaturedTrades();
+
+        // Setup performance monitoring
+        PerformanceMonitor.logPageLoadMetrics();
+
+        // Check for URL parameters
+        const params = URLHandler.getQueryParams();
+        if (params.action === 'login') {
+            // Handle direct login requests
+            AuthHandler.checkAuth();
+        }
+
+    } catch (error) {
+        console.error('Initialization error:', error);
+        ErrorHandler.showError('There was an error initializing the application. Please refresh the page.');
+    }
+
+    PerformanceMonitor.endTimer('init');
+});
+
+/**
+ * EXPORT MODULES
+ */
+window.Bartradia = {
+    auth: AuthHandler,
+    trades: FeaturedTradesHandler,
+    security: SecurityUtils,
+    error: ErrorHandler
+};
+
