@@ -104,11 +104,11 @@ p {
     position: relative;
     text-align: center;
     color: white;
-    min-height: 500px;
+    min-height: 300px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    max-width: 800px;
+    max-width: 500px;
     margin: 0 auto;
     padding: 0 20px;
 }
