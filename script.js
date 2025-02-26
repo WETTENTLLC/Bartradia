@@ -1,467 +1,483 @@
-document.addEventListener('DOMContentLoaded', (event) => {
-    // Trade Items Management
-    const tradeForm = document.getElementById('tradeForm');
-    const tradeList = document.getElementById('tradeList');
-
-    const displayTrades = async () => {
-        const response = await fetch('/api/trades');
-        const data = await response.json();
-        tradeList.innerHTML = data.trades.map(trade => `
-            <div class="trade-item" data-id="${trade.id}">
-                <img src="${trade.image}" alt="${trade.name}" class="trade-image" onerror="this.src='images/fallback.png'; this.alt='Fallback Image';">
-                <strong>${trade.name}</strong>
-                <p>${trade.description}</p>
-                <button class="edit-btn">Edit</button>
-                <button class="delete-btn">Delete</button>
-            </div>
-        `).join('');
-        attachEventListeners();
-    };
-
-    const attachEventListeners = () => {
-        document.querySelectorAll('.edit-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const tradeElement = e.target.closest('.trade-item');
-                const tradeId = tradeElement.dataset.id;
-                const tradeName = prompt('Enter new name:', tradeElement.querySelector('strong').innerText);
-                const tradeDescription = prompt('Enter new description:', tradeElement.querySelector('p').innerText);
-                if (tradeName && tradeDescription) {
-                    updateTrade(tradeId, tradeName, tradeDescription);
-                }
-            });
-        });
-
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const tradeElement = e.target.closest('.trade-item');
-                const tradeId = tradeElement.dataset.id;
-                deleteTrade(tradeId);
-            });
-        });
-    };
-
-    if (tradeForm) {
-        tradeForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const tradeName = document.getElementById('itemName').value;
-            const tradeDescription = document.getElementById('itemDescription').value;
-            const tradeImage = document.getElementById('itemImage').files[0];
-
-            const formData = new FormData();
-            formData.append('name', tradeName);
-            formData.append('description', tradeDescription);
-            formData.append('image', tradeImage);
-
-            const response = await fetch('/api/trades', {
-                method: 'POST',
-                body: formData
-            });
-            const result = await response.json();
-            if (result.id) {
-                displayTrades();
-            }
-            tradeForm.reset();
-        });
+/**
+ * CONFIGURATION AND GLOBAL VARIABLES
+ */
+const CONFIG = {
+    API_BASE_URL: '/api',
+    MAX_FILE_SIZE: 5242880, // 5MB
+    ALLOWED_FILE_TYPES: ['image/jpeg', 'image/png', 'image/gif'],
+    PASSWORD_MIN_LENGTH: 8,
+    RATE_LIMIT: {
+        windowMs: 15 * 60 * 1000,
+        maxRequests: 100
+    },
+    ERROR_MESSAGES: {
+        NETWORK_ERROR: 'Network error occurred. Please try again.',
+        INVALID_FILE: 'Invalid file type or size.',
+        INVALID_INPUT: 'Please provide valid input.',
+        UNAUTHORIZED: 'You are not authorized to perform this action.'
     }
-
-    const updateTrade = async (id, name, description) => {
-        const response = await fetch(`/api/trades/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name, description }),
-        });
-        const result = await response.json();
-        if (result.updated) {
-            displayTrades();
-        }
-    };
-
-    const deleteTrade = async (id) => {
-        const response = await fetch(`/api/trades/${id}`, {
-            method: 'DELETE',
-        });
-        const result = await response.json();
-        if (result.deleted) {
-            displayTrades();
-        }
-    };
-
-    displayTrades();
-
-    // About Modal Management
-    const readMoreLink = document.getElementById('readMoreLink');
-    const aboutModal = document.getElementById('aboutModal');
-
-    if (readMoreLink && aboutModal) {
-        readMoreLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            aboutModal.classList.remove('hidden');
-        });
-
-        const modalLink = document.querySelector('.modal-link');
-        if (modalLink) {
-            modalLink.addEventListener('click', () => {
-                aboutModal.classList.add('hidden');
-            });
-        }
-    }
-});
-
-// Additional functions
-function addCreditsToTradeRoom() {
-    // Logic for adding credits to the trade room
-}
-
-function applyCredits() {
-    const form = document.getElementById('creditApplicationForm');
-    form.classList.toggle('hidden');
-    
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const creditAmount = document.getElementById('creditAmount').value;
-        // Logic for applying credits
-    });
-}
-
-function donateCredits() {
-    const form = document.getElementById('donationForm');
-    form.classList.toggle('hidden');
-    
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const donationAmount = document.getElementById('donationAmount').value;
-        const recipient = document.getElementById('recipient').value;
-        // Logic for donating credits
-    });
-}
-
-function featureBadge(badgeName) {
-    alert(`${badgeName} is now featured on your profile!`);
-    // Logic to set the badge as featured on user's profile
-}
-
-document.getElementById("getStartedBtn").addEventListener("click", function() {
-    window.location.href = "signup.html"; // Ensure this path is correct
-});
-
-document.querySelector('form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const category = document.querySelector('#category').value;
-    const items = document.querySelectorAll('.trade-item');
-    
-    items.forEach(item => {
-        if (category === 'all' || item.getAttribute('data-category') === category) {
-            item.style.display = 'block';
-        } else {
-            item.style.display = 'none';
-        }
-    });
-});
-
-const express = require('express');
-const bodyParser = require('body-parser');
-const app = express();
-
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.post('/signup', (req, res) => {
-    const { username, email, password } = req.body;
-    // Add user to the database (this is a placeholder, implement your DB logic)
-    console.log('New user:', { username, email, password });
-    res.send('Sign-up successful!');
-});
-
-app.listen(3000, () => {
-    console.log('Server running on http://localhost:3000');
-});
-
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
-
-app.post('/post-item', upload.single('image'), (req, res) => {
-    const { title, description, category } = req.body;
-    const image = req.file;
-    // Save the item to the database (implement your DB logic here)
-    console.log('New trade item:', { title, description, category, image });
-    res.send('Item posted successfully!');
-});
-app.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    // Check user credentials (implement your authentication logic here)
-    console.log('User login:', { username, password });
-    res.send('Login successful!');
-});
-
-const isAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/login');
 };
 
-// Example usage
-app.get('/dashboard', isAuthenticated, (req, res) => {
-    res.send('Welcome to your dashboard!');
-});
+/**
+ * SECURITY AND VALIDATION UTILITIES
+ */
+const SecurityUtils = {
+    validatePassword: (password) => {
+        const requirements = {
+            length: password.length >= CONFIG.PASSWORD_MIN_LENGTH,
+            number: /\d/.test(password),
+            special: /[!@#$%^&*]/.test(password),
+            upper: /[A-Z]/.test(password),
+            lower: /[a-z]/.test(password)
+        };
+        return Object.values(requirements).every(req => req === true);
+    },
 
+    sanitizeInput: (input) => {
+        if (typeof input !== 'string') return '';
+        return input.replace(/<[^>]*>/g, '').trim();
+    },
 
-// Handle sign-up form submission and redirect to confirmation page
-app.post('/signup', (req, res) => {
-    const { username, email, password } = req.body;
-    // Add user to the database (implement your DB logic here)
-    console.log('New user:', { username, email, password });
-    res.redirect('/confirmation.html');
-});
+    validateFileUpload: (file) => {
+        return file && 
+               file.size <= CONFIG.MAX_FILE_SIZE && 
+               CONFIG.ALLOWED_FILE_TYPES.includes(file.type);
+    },
 
-// Handle post item form submission and redirect to confirmation page
-app.post('/post-item', upload.single('image'), (req, res) => {
-    const { title, description, category } = req.body;
-    const image = req.file;
-    // Save the item to the database (implement your DB logic here)
-    console.log('New trade item:', { title, description, category, image });
-    res.redirect('/confirmation.html');
-});
-
-// Handle login form submission and redirect to confirmation page
-app.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    // Check user credentials (implement your authentication logic here)
-    console.log('User login:', { username, password });
-    res.redirect('/confirmation.html');
-});
-
-
-app.post('/signup', (req, res) => {
-    try {
-        const { username, email, password } = req.body;
-        // Add user to the database (implement your DB logic here)
-        console.log('New user:', { username, email, password });
-        res.redirect('/confirmation.html');
-    } catch (error) {
-        console.error('Error during sign-up:', error);
-        res.status(500).send('An error occurred during sign-up.');
+    validateEmail: (email) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
     }
-});
+};
 
-app.post('/post-item', upload.single('image'), (req, res) => {
-    try {
-        const { title, description, category } = req.body;
-        const image = req.file;
-        // Save the item to the database (implement your DB logic here)
-        console.log('New trade item:', { title, description, category, image });
-        res.redirect('/confirmation.html');
-    } catch (error) {
-        console.error('Error during item posting:', error);
-        res.status(500).send('An error occurred while posting the item.');
+/**
+ * ERROR HANDLING UTILITIES
+ */
+const ErrorHandler = {
+    showError: (message, elementId = 'error-message') => {
+        const errorElement = document.getElementById(elementId);
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        } else {
+            console.error(message);
+        }
+    },
+
+    handleFetchError: (error) => {
+        console.error('API Error:', error);
+        ErrorHandler.showError(CONFIG.ERROR_MESSAGES.NETWORK_ERROR);
     }
-});
+};
 
-app.post('/login', (req, res) => {
-    try {
-        const { username, password } = req.body;
-        // Check user credentials (implement your authentication logic here)
-        console.log('User login:', { username, password });
-        res.redirect('/confirmation.html');
-    } catch (error) {
-        console.error('Error during login:', error);
-        res.status(500).send('An error occurred during login.');
+/**
+ * RATE LIMITER
+ */
+class RateLimiter {
+    constructor() {
+        this.requests = new Map();
+        this.windowMs = CONFIG.RATE_LIMIT.windowMs;
+        this.maxRequests = CONFIG.RATE_LIMIT.maxRequests;
     }
-});
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Trade Items Management
-    const tradeForm = document.getElementById('tradeForm');
-    const tradeList = document.getElementById('tradeList');
+    checkLimit(userId) {
+        const now = Date.now();
+        const userRequests = this.requests.get(userId) || [];
+        const validRequests = userRequests.filter(time => now - time < this.windowMs);
+        
+        if (validRequests.length >= this.maxRequests) {
+            return false;
+        }
 
-    const displayTrades = async () => {
+        validRequests.push(now);
+        this.requests.set(userId, validRequests);
+        return true;
+    }
+}
+
+const rateLimiter = new RateLimiter();
+/**
+ * TRADE ITEMS MANAGEMENT
+ */
+const TradeManager = {
+    async displayTrades() {
         try {
-            const response = await fetch('/api/trades');
-            if (!response.ok) throw new Error('Network response was not ok');
+            const response = await fetch(`${CONFIG.API_BASE_URL}/trades`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            
+            if (!response.ok) throw new Error('Failed to fetch trades');
+            
             const data = await response.json();
+            const tradeList = document.getElementById('tradeList');
+            
+            if (!tradeList) return;
+
             tradeList.innerHTML = data.trades.map(trade => `
-                <div class="trade-item" data-id="${trade.id}">
-                    <img src="${trade.image}" alt="${trade.name}" class="trade-image" onerror="this.src='images/fallback.png'; this.alt='Fallback Image';">
-                    <strong>${trade.name}</strong>
-                    <p>${trade.description}</p>
-                    <button class="edit-btn">Edit</button>
-                    <button class="delete-btn">Delete</button>
+                <div class="trade-item" data-id="${SecurityUtils.sanitizeInput(trade.id)}">
+                    <img src="${SecurityUtils.sanitizeInput(trade.image)}" 
+                         alt="${SecurityUtils.sanitizeInput(trade.name)}" 
+                         class="trade-image" 
+                         onerror="this.src='images/fallback.png'">
+                    <strong>${SecurityUtils.sanitizeInput(trade.name)}</strong>
+                    <p>${SecurityUtils.sanitizeInput(trade.description)}</p>
+                    <div class="trade-actions">
+                        <button class="edit-btn" data-id="${trade.id}">Edit</button>
+                        <button class="delete-btn" data-id="${trade.id}">Delete</button>
+                    </div>
                 </div>
             `).join('');
-            attachEventListeners();
+            
+            this.attachEventListeners();
         } catch (error) {
-            console.error('Error fetching trades:', error);
+            ErrorHandler.handleFetchError(error);
         }
-    };
+    },
 
-    const attachEventListeners = () => {
-        document.querySelectorAll('.edit-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const tradeElement = e.target.closest('.trade-item');
-                const tradeId = tradeElement.dataset.id;
-                const tradeName = prompt('Enter new name:', tradeElement.querySelector('strong').innerText);
-                const tradeDescription = prompt('Enter new description:', tradeElement.querySelector('p').innerText);
-                if (tradeName && tradeDescription) {
-                    updateTrade(tradeId, tradeName, tradeDescription);
-                }
-            });
-        });
-
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const tradeElement = e.target.closest('.trade-item');
-                const tradeId = tradeElement.dataset.id;
-                deleteTrade(tradeId);
-            });
-        });
-    };
-
-    if (tradeForm) {
-        tradeForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const tradeName = document.getElementById('itemName').value;
-            const tradeDescription = document.getElementById('itemDescription').value;
-            const tradeImage = document.getElementById('itemImage').files[0];
-
-            const formData = new FormData();
-            formData.append('name', tradeName);
-            formData.append('description', tradeDescription);
-            formData.append('image', tradeImage);
-
-            try {
-                const response = await fetch('/api/trades', {
-                    method: 'POST',
-                    body: formData
-                });
-                if (!response.ok) throw new Error('Failed to add trade');
-                const result = await response.json();
-                if (result.id) {
-                    displayTrades();
-                }
-                tradeForm.reset();
-            } catch (error) {
-                console.error('Error adding trade:', error);
-            }
-        });
-    }
-
-    const updateTrade = async (id, name, description) => {
+    async createTrade(formData) {
         try {
-            const response = await fetch(`/api/trades/${id}`, {
+            if (!rateLimiter.checkLimit('user')) {
+                throw new Error('Rate limit exceeded');
+            }
+
+            const response = await fetch(`${CONFIG.API_BASE_URL}/trades`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: formData
+            });
+
+            if (!response.ok) throw new Error('Failed to create trade');
+            
+            const result = await response.json();
+            await this.displayTrades();
+            return result;
+        } catch (error) {
+            ErrorHandler.handleFetchError(error);
+            return null;
+        }
+    },
+
+    async updateTrade(id, data) {
+        try {
+            if (!rateLimiter.checkLimit('user')) {
+                throw new Error('Rate limit exceeded');
+            }
+
+            const response = await fetch(`${CONFIG.API_BASE_URL}/trades/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ name, description }),
+                body: JSON.stringify(data)
             });
+
             if (!response.ok) throw new Error('Failed to update trade');
+            
             const result = await response.json();
-            if (result.updated) {
-                displayTrades();
-            }
+            await this.displayTrades();
+            return result;
         } catch (error) {
-            console.error('Error updating trade:', error);
+            ErrorHandler.handleFetchError(error);
+            return null;
         }
-    };
+    },
 
-    const deleteTrade = async (id) => {
+    async deleteTrade(id) {
         try {
-            const response = await fetch(`/api/trades/${id}`, {
-                method: 'DELETE',
-            });
-            if (!response.ok) throw new Error('Failed to delete trade');
-            const result = await response.json();
-            if (result.deleted) {
-                displayTrades();
+            if (!rateLimiter.checkLimit('user')) {
+                throw new Error('Rate limit exceeded');
             }
+
+            const response = await fetch(`${CONFIG.API_BASE_URL}/trades/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (!response.ok) throw new Error('Failed to delete trade');
+            
+            await this.displayTrades();
+            return true;
         } catch (error) {
-            console.error('Error deleting trade:', error);
+            ErrorHandler.handleFetchError(error);
+            return false;
         }
-    };
-
-    displayTrades();
-
-    // About Modal Management
-    const readMoreLink = document.getElementById('readMoreLink');
-    const aboutModal = document.getElementById('aboutModal');
-
-    if (readMoreLink && aboutModal) {
-        readMoreLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            aboutModal.classList.remove('hidden');
+    },
+    attachEventListeners() {
+        // Edit buttons
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const tradeId = e.target.dataset.id;
+                this.handleEdit(tradeId);
+            });
         });
 
-        const modalLink = document.querySelector('.modal-link');
-        if (modalLink) {
-            modalLink.addEventListener('click', () => {
-                aboutModal.classList.add('hidden');
+        // Delete buttons
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                if (confirm('Are you sure you want to delete this trade?')) {
+                    const tradeId = e.target.dataset.id;
+                    await this.deleteTrade(tradeId);
+                }
+            });
+        });
+    },
+
+    handleEdit(tradeId) {
+        const tradeItem = document.querySelector(`.trade-item[data-id="${tradeId}"]`);
+        const name = tradeItem.querySelector('strong').textContent;
+        const description = tradeItem.querySelector('p').textContent;
+
+        document.getElementById('editTradeId').value = tradeId;
+        document.getElementById('editName').value = name;
+        document.getElementById('editDescription').value = description;
+        
+        document.getElementById('editModal').style.display = 'block';
+    }
+};
+
+/**
+ * FORM HANDLING AND VALIDATION
+ */
+const FormHandler = {
+    validateTradeForm(formData) {
+        const name = formData.get('name');
+        const description = formData.get('description');
+        const image = formData.get('image');
+
+        if (!name || name.length < 2) {
+            ErrorHandler.showError('Name must be at least 2 characters long');
+            return false;
+        }
+
+        if (!description || description.length < 10) {
+            ErrorHandler.showError('Description must be at least 10 characters long');
+            return false;
+        }
+
+        if (image && !SecurityUtils.validateFileUpload(image)) {
+            ErrorHandler.showError(CONFIG.ERROR_MESSAGES.INVALID_FILE);
+            return false;
+        }
+
+        return true;
+    },
+
+    setupFormListeners() {
+        const tradeForm = document.getElementById('tradeForm');
+        const editForm = document.getElementById('editForm');
+        const closeModal = document.querySelector('.close-modal');
+
+        if (tradeForm) {
+            tradeForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(tradeForm);
+                
+                if (this.validateTradeForm(formData)) {
+                    await TradeManager.createTrade(formData);
+                    tradeForm.reset();
+                }
+            });
+        }
+
+        if (editForm) {
+            editForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const tradeId = document.getElementById('editTradeId').value;
+                const formData = new FormData(editForm);
+                const data = Object.fromEntries(formData.entries());
+                
+                if (this.validateTradeForm(formData)) {
+                    await TradeManager.updateTrade(tradeId, data);
+                    document.getElementById('editModal').style.display = 'none';
+                }
+            });
+        }
+
+        if (closeModal) {
+            closeModal.addEventListener('click', () => {
+                document.getElementById('editModal').style.display = 'none';
             });
         }
     }
-});
+};
 
-document.getElementById('searchButton').addEventListener('click', () => {
-    const query = document.getElementById('searchInput').value.toLowerCase();
-    const items = document.querySelectorAll('.trade-item');
-    items.forEach(item => {
-        const itemName = item.querySelector('strong').innerText.toLowerCase();
-        item.style.display = itemName.includes(query) ? 'block' : 'none';
-    });
-});
+/**
+ * AUTHENTICATION HANDLING
+ */
+const AuthHandler = {
+    async login(credentials) {
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(credentials)
+            });
 
-document.getElementById('signUpBtn').addEventListener('click', (e) => {
-    const email = document.getElementById('emailInput').value;
-    const password = document.getElementById('passwordInput').value;
-    if (!email || !password) {
-        e.preventDefault();
-        alert('Please fill in all fields.');
+            if (!response.ok) throw new Error('Login failed');
+
+            const data = await response.json();
+            localStorage.setItem('token', data.token);
+            return true;
+        } catch (error) {
+            ErrorHandler.handleFetchError(error);
+            return false;
+        }
+    },
+
+    logout() {
+        localStorage.removeItem('token');
+        window.location.href = '/login.html';
+    },
+
+    checkAuth() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/login.html';
+            return false;
+        }
+        return true;
     }
-});
+};
+/**
+ * UTILITY FUNCTIONS
+ */
+const Utils = {
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    },
 
+    formatDate(date) {
+        return new Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        }).format(new Date(date));
+    },
 
-document.getElementById('signUpForm').addEventListener('submit', function(event) {
-    const fullName = document.getElementById('fullName').value;
-    const idNumber = document.getElementById('idNumber').value;
-    const cardNumber = document.getElementById('cardNumber').value;
+    createLoadingSpinner() {
+        const spinner = document.createElement('div');
+        spinner.className = 'loading-spinner';
+        spinner.innerHTML = '<div class="spinner"></div>';
+        return spinner;
+    },
 
-    if (!fullName || !idNumber || !cardNumber) {
-        event.preventDefault();
-        alert('Please fill in all required fields.');
+    showLoading() {
+        const spinner = this.createLoadingSpinner();
+        document.body.appendChild(spinner);
+    },
+
+    hideLoading() {
+        const spinner = document.querySelector('.loading-spinner');
+        if (spinner) {
+            spinner.remove();
+        }
     }
-});
+};
 
+/**
+ * APPLICATION INITIALIZATION
+ */
+const App = {
+    init() {
+        // Initialize rate limiter
+        const rateLimiter = new RateLimiter();
 
-function displayConfirmation() {
-    document.getElementById('signUpForm').style.display = 'none';
-    document.getElementById('confirmationMessage').style.display = 'block';
-    return false; // Prevent form submission for demo purposes
+        // Check authentication on protected pages
+        if (window.location.pathname !== '/login.html') {
+            if (!AuthHandler.checkAuth()) return;
+        }
+
+        // Setup event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            FormHandler.setupFormListeners();
+            
+            // Initialize trades display if on main page
+            if (document.getElementById('tradeList')) {
+                TradeManager.displayTrades();
+            }
+
+            // Setup logout button
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', AuthHandler.logout);
+            }
+
+            // Setup login form
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(loginForm);
+                    const credentials = {
+                        email: formData.get('email'),
+                        password: formData.get('password')
+                    };
+
+                    if (!SecurityUtils.validateEmail(credentials.email)) {
+                        ErrorHandler.showError('Please enter a valid email address');
+                        return;
+                    }
+
+                    if (!SecurityUtils.validatePassword(credentials.password)) {
+                        ErrorHandler.showError('Password must be at least 8 characters long and contain numbers, special characters, and both upper and lowercase letters');
+                        return;
+                    }
+
+                    Utils.showLoading();
+                    const success = await AuthHandler.login(credentials);
+                    Utils.hideLoading();
+
+                    if (success) {
+                        window.location.href = '/dashboard.html';
+                    }
+                });
+            }
+        });
+
+        // Handle network status
+        window.addEventListener('online', () => {
+            ErrorHandler.showError('Connection restored', 'network-status');
+        });
+
+        window.addEventListener('offline', () => {
+            ErrorHandler.showError('No internet connection', 'network-status');
+        });
+    }
+};
+
+// Initialize the application
+App.init();
+
+// Export modules for testing (if using modules)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        TradeManager,
+        FormHandler,
+        AuthHandler,
+        SecurityUtils,
+        ErrorHandler,
+        Utils
+    };
 }
-
-document.cookie = "sessionId=abc123; Secure; HttpOnly; SameSite=Strict";
-
-
-const rateLimit = require('express-rate-limit');
-
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: "Too many requests from this IP, please try again after 15 minutes"
-});
-
-app.use('/api/', apiLimiter);
-
-
-const { body, validationResult } = require('express-validator');
-
-app.post('/signup', [
-  body('username').isAlphanumeric().trim().escape(),
-  body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 6 }).trim().escape()
-], (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  // Proceed with user registration
-});
