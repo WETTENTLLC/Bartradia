@@ -115,6 +115,21 @@ header {
     font-weight: 500;
 }
 
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+/* Add container padding for smaller screens */
+@media screen and (max-width: 768px) {
+    main {
+        padding: var(--spacing-md);
+    }
+}
+
 .nav-bar {
     display: flex;
     justify-content: space-between;
@@ -258,12 +273,23 @@ main {
     text-align: center;
 }
 
+/* Specific adjustments for hero frame */
+.hero.frame {
+    padding: var(--spacing-xl);
+    border: none;
+    background: linear-gradient(
+        45deg,
+        var(--primary-color),
+        var(--secondary-color)
+    );
+}
+
 /* Featured Trades Enhancement */
-.featured-trades {
+.featured-trades.frame {
     .grid-container {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: var(--spacing-md);
+        padding: var(--spacing-lg);
     }
 }
 
@@ -295,7 +321,7 @@ main {
 }
 
 /* Barter Buddies Section */
-.barter-buddies-preview {
+.barter-buddies-preview.frame {
     padding: var(--spacing-xl) 0;
     background: linear-gradient(to right, var(--background-light) 0%, transparent 100%);
 }
