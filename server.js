@@ -250,3 +250,19 @@ const shutdown = async () => {
 
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
+
+// server.js
+const path = require('path');
+
+// Serve static files from 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// server.js
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Route to render the signup page
+app.get('/signup', (req, res) => {
+    res.render('pages/signup');
+});
+
