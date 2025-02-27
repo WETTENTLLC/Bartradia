@@ -101,3 +101,126 @@
                 </ul>
             </div>
         </section>
+
+                <!-- User Badges Section -->
+        <section class="user-badges frame">
+            <h2>User Badges</h2>
+            <div class="badges-content">
+                <img src="Public/images/user-badges.jpg" 
+                     alt="Collection of achievable user badges" 
+                     class="user-badges-image" 
+                     onerror="this.src='images/fallback3.png'">
+                <div class="badges-description">
+                    <p>Our user badges system is designed to make participation fun and rewarding:</p>
+                    <ul>
+                        <li><strong>Starter Badge:</strong> Earned by completing your first trade.</li>
+                        <li><strong>Trade Badges:</strong> Earn badges for specific types of trades, frequent trading, and for trades with high user satisfaction ratings.</li>
+                        <li><strong>Community Badges:</strong> Recognizes users who actively participate in community events, help others, and promote sustainable living.</li>
+                        <li><strong>Achievement Badges:</strong> Awarded for reaching trading milestones and achievements on the platform.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="hover-frame">
+                <a href="user-dashboard.html">View Your Badges</a>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact frame">
+            <h2>Contact Us</h2>
+            <div class="contact-content">
+                <p>If you have any questions, feedback, or need assistance, feel free to reach out to us:</p>
+                <ul class="contact-info">
+                    <li>
+                        <i class="icon-email"></i>
+                        Email: <a href="mailto:support@onemanstrash.com">support@onemanstrash.com</a>
+                    </li>
+                    <li>
+                        <i class="icon-phone"></i>
+                        Phone: (555) 123-4567
+                    </li>
+                    <li>
+                        <i class="icon-location"></i>
+                        Address: 123 Main Street, Reno, NV
+                    </li>
+                </ul>
+                <div class="hover-frame">
+                    <a href="contact.html">Get in Touch</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Error and Loading Components -->
+        <div id="errorContainer" class="error-container hidden" role="alert" aria-live="polite"></div>
+        <div id="loadingIndicator" class="loading-indicator hidden" role="status" aria-live="polite">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+
+        <!-- About Modal -->
+        <div class="modal hidden" id="aboutModal">
+            <div class="modal-content">
+                <p>Discover more about Bartradia and its affiliation with Wett Enterprises.</p>
+                <a href="comprehensive_description.html" target="_blank">Read More</a>
+            </div>
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <img src="images/bartradia-logo-small.png" alt="Bartradia" class="footer-logo">
+                <p class="footer-slogan">Trade Treasures, Save Together</p>
+            </div>
+            <div class="footer-links">
+                <nav class="footer-navigation">
+                    <ul>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                        <li><a href="terms-of-service.html">Terms of Service</a></li>
+                        <li><a href="faq.html">FAQ</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="social-links">
+                <a href="https://www.facebook.com/bartradia" target="_blank" rel="noopener">
+                    <img src="images/facebook-icon.png" alt="Facebook">
+                </a>
+                <a href="https://www.instagram.com/bartradia" target="_blank" rel="noopener">
+                    <img src="images/instagram-icon.png" alt="Instagram">
+                </a>
+                <a href="https://www.twitter.com/bartradia" target="_blank" rel="noopener">
+                    <img src="images/twitter-icon.png" alt="Twitter">
+                </a>
+            </div>
+            <p class="copyright">&copy; 2025 Bartradia. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/main.js" type="module"></script>
+    <script src="/js/components/modal.js" type="module"></script>
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Bartradia",
+      "url": "https://www.bartradia.com",
+      "logo": "https://www.bartradia.com/images/logo.png",
+      "sameAs": [
+        "https://www.facebook.com/bartradia",
+        "https://www.instagram.com/bartradia",
+        "https://www.twitter.com/bartradia"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+1-555-123-4567",
+        "contactType": "customer service",
+        "email": "support@onemanstrash.com"
+      }
+    }
+    </script>
+</body>
+</html>
+
