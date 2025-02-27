@@ -43,6 +43,16 @@
     --transition-normal: 0.3s ease;
 }
 
+/* Frame spacing utilities */
+.frame + .frame {
+    margin-top: var(--spacing-lg);
+}
+
+.frame:last-child {
+    margin-bottom: 0;
+}
+
+
 /* Enhanced Reset */
 *, *::before, *::after {
     margin: 0;
@@ -135,10 +145,7 @@ main {
 
 /* Add container padding for smaller screens */
 @media screen and (max-width: 768px) {
-    main {
-        padding: var(--spacing-md);
-    }
-}
+   
 
 .nav-bar {
     display: flex;
@@ -222,6 +229,18 @@ main {
     }
 }
 
+    /* About frame */
+.about.frame .inner-frame {
+    background-color: var(--background-light);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+}
+
+/* Contact frame */
+.contact.frame {
+    background-color: var(--white);
+}
+
 /* Main Content Layout */
 main {
     max-width: 1200px;
@@ -237,16 +256,21 @@ main {
     border-radius: var(--border-radius-md);
     padding: var(--spacing-md);
     box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-md);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Add hover effects only to interactive frames */
+.frame.interactive {
     transition: transform var(--transition-normal),
                 box-shadow var(--transition-normal);
-    transform: translateZ(0);
-    will-change: transform, box-shadow;
     
     &:hover {
-        transform: translateY(-5px) translateZ(0);
+        transform: translateY(-5px);
         box-shadow: var(--shadow-hover);
     }
 }
+
 
 /* Hero Section Enhancement */
 .hero {
@@ -287,6 +311,7 @@ main {
 .hero.frame {
     padding: var(--spacing-xl);
     border: none;
+    color: var(--white);
     background: linear-gradient(
         45deg,
         var(--primary-color),
@@ -328,7 +353,6 @@ main {
     flex-direction: column;
     gap: var(--spacing-xs);
     }
-}
 
 /* Barter Buddies Section */
 .barter-buddies-preview.frame {
@@ -647,8 +671,8 @@ footer {
 
 /* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
-    :root {
-        --background-light: #1a1a1a;
+    .frame {
+        background-color: var(--white);
         --text-color: #e0e0e0;
         --white: #2d2d2d;
         --primary-color: #5cbb60;
@@ -661,6 +685,10 @@ footer {
     
     .frame {
         background-color: #2d2d2d;
+    }
+
+    .frame .inner-frame {
+        background-color: rgba(0, 0, 0, 0.2);
     }
     
     .brand-container {
