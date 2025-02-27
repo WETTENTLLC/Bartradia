@@ -1,195 +1,252 @@
-require('dotenv').config(); // Add environment variables support
+require('dotenv').config();
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 
+// Constants
+const CONFIG = {
+    PORT: process.env.PORT || 3000,
+    UPLOAD_DIR: 'public/uploads',
+    DB_PATH: ':memory:', // Consider changing to a file-based DB for persistence
+    FILE_LIMITS: {
+        SIZE: 5 * 1024 * 1024, // 5MB
+        TYPES: ['.jpg', '.jpeg', '.png', '.gif']
+    },
+    VALIDATION: {
+        NAME_MAX_LENGTH: 100,
+        DESC_MAX_LENGTH: 1000,
+        EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    }
+};
+
+// Initialize Express app
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware for security
-app.use(express.json({ limit: '10mb' })); // Limit payload size
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Security Middleware
+const configureSecurityMiddleware = (app) => {
+    app.use(express.json({ limit: '10mb' }));
+    app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+    // Add more security middleware here (helmet, cors, etc.)
+};
 
-// Static file serving
-app.use(express.static(path.join(__dirname, 'public')));
+// File Upload Configuration
+const configureFileUpload = () => {
+    // Ensure uploads directory exists
+    if (!fs.existsSync(CONFIG.UPLOAD_DIR)) {
+        fs.mkdirSync(CONFIG.UPLOAD_DIR, { recursive: true });
+    }
 
-// Ensure uploads directory exists
-const uploadDir = 'public/uploads';
-if (!fs.existsSync(uploadDir)){
-    fs.mkdirSync(uploadDir, { recursive: true });
+    const storage = multer.diskStorage({
+        destination: (req, file, cb) => cb(null, CONFIG.UPLOAD_DIR),
+        filename: (req, file, cb) => {
+            const ext = path.extname(file.originalname).toLowerCase();
+            const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(7)}${ext}`;
+            cb(null, uniqueName);
+        }
+    });
+
+    const fileFilter = (req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase();
+        if (CONFIG.FILE_LIMITS.TYPES.includes(ext)) {
+            cb(null, true);
+        } else {
+            cb(new Error(`Invalid file type. Allowed types: ${CONFIG.FILE_LIMITS.TYPES.join(', ')}`));
+        }
+    };
+
+    return multer({
+        storage,
+        fileFilter,
+        limits: { fileSize: CONFIG.FILE_LIMITS.SIZE }
+    });
+};
+
+// Database Configuration
+class Database {
+    constructor() {
+        this.db = new sqlite3.Database(CONFIG.DB_PATH, (err) => {
+            if (err) {
+                console.error('Database connection error:', err);
+            } else {
+                console.log('Connected to SQLite database');
+                this.initialize();
+            }
+        });
+    }
+
+    initialize() {
+        this.db.serialize(() => {
+            this.db.run(`CREATE TABLE IF NOT EXISTS trades (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                description TEXT NOT NULL,
+                image TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )`);
+        });
+    }
+
+    close() {
+        return new Promise((resolve, reject) => {
+            this.db.close((err) => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+    }
 }
 
-// Configure multer for file uploads with validation
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/uploads/');
+// Validation Middleware
+const validators = {
+    trade: (req, res, next) => {
+        const { name, description } = req.body;
+        
+        if (!name || !description) {
+            return res.status(400).json({ error: 'Name and description are required' });
+        }
+        if (name.length > CONFIG.VALIDATION.NAME_MAX_LENGTH) {
+            return res.status(400).json({ error: `Name must be less than ${CONFIG.VALIDATION.NAME_MAX_LENGTH} characters` });
+        }
+        if (description.length > CONFIG.VALIDATION.DESC_MAX_LENGTH) {
+            return res.status(400).json({ error: `Description must be less than ${CONFIG.VALIDATION.DESC_MAX_LENGTH} characters` });
+        }
+        next();
     },
-    filename: function (req, file, cb) {
-        // Add file type validation
-        const ext = path.extname(file.originalname).toLowerCase();
-        cb(null, `${Date.now()}-${Math.random().toString(36).substring(7)}${ext}`);
-    }
-});
 
-const fileFilter = (req, file, cb) => {
-    // Allow only specific file types
-    const allowedTypes = ['.jpg', '.jpeg', '.png', '.gif'];
-    const ext = path.extname(file.originalname).toLowerCase();
-    
-    if (allowedTypes.includes(ext)) {
-        cb(null, true);
-    } else {
-        cb(new Error('Invalid file type. Only JPG, JPEG, PNG & GIF files are allowed.'));
+    contact: (req, res, next) => {
+        const { name, email, message } = req.body;
+        
+        if (!name || !email || !message) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
+        if (!CONFIG.VALIDATION.EMAIL_REGEX.test(email)) {
+            return res.status(400).json({ error: 'Invalid email format' });
+        }
+        next();
     }
 };
 
-const upload = multer({ 
-    storage: storage,
-    fileFilter: fileFilter,
-    limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
-    }
-});
+// Route Handlers
+const handlers = {
+    contact: {
+        create: (req, res) => {
+            const { name, email, message } = req.body;
+            console.log(`Contact received: Name: ${name}, Email: ${email}, Message: ${message}`);
+            res.json({ success: true });
+        }
+    },
 
-// Database initialization
-const db = new sqlite3.Database(':memory:', (err) => {
-    if (err) {
-        console.error('Error opening database:', err);
-    } else {
-        console.log('Connected to the in-memory SQLite database');
-    }
-});
+    trades: {
+        create: (req, res) => {
+            const { name, description } = req.body;
+            if (!req.file) {
+                return res.status(400).json({ error: 'Image is required' });
+            }
 
-// Database setup
-db.serialize(() => {
-    db.run(`CREATE TABLE trades (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        description TEXT NOT NULL,
-        image TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
-});
+            const image = `/uploads/${req.file.filename}`;
+            
+            db.db.run(
+                "INSERT INTO trades (name, description, image) VALUES (?, ?, ?)",
+                [name, description, image],
+                function(err) {
+                    if (err) {
+                        console.error('Database error:', err);
+                        return res.status(500).json({ error: 'Failed to create trade' });
+                    }
+                    res.json({ id: this.lastID, name, description, image });
+                }
+            );
+        },
 
-// Input validation middleware
-const validateTradeInput = (req, res, next) => {
-    const { name, description } = req.body;
-    if (!name || !description) {
-        return res.status(400).json({ error: 'Name and description are required' });
+        getAll: (req, res) => {
+            db.db.all("SELECT * FROM trades ORDER BY created_at DESC", [], (err, rows) => {
+                if (err) {
+                    console.error('Database error:', err);
+                    return res.status(500).json({ error: 'Failed to fetch trades' });
+                }
+                res.json({ trades: rows });
+            });
+        },
+
+        update: (req, res) => {
+            const { id } = req.params;
+            const { name, description } = req.body;
+
+            db.db.run(
+                "UPDATE trades SET name = ?, description = ? WHERE id = ?",
+                [name, description, id],
+                function(err) {
+                    if (err) {
+                        console.error('Database error:', err);
+                        return res.status(500).json({ error: 'Failed to update trade' });
+                    }
+                    if (this.changes === 0) {
+                        return res.status(404).json({ error: 'Trade not found' });
+                    }
+                    res.json({ updated: true, id });
+                }
+            );
+        },
+
+        delete: (req, res) => {
+            const { id } = req.params;
+            
+            db.db.run("DELETE FROM trades WHERE id = ?", id, function(err) {
+                if (err) {
+                    console.error('Database error:', err);
+                    return res.status(500).json({ error: 'Failed to delete trade' });
+                }
+                if (this.changes === 0) {
+                    return res.status(404).json({ error: 'Trade not found' });
+                }
+                res.json({ deleted: true, id });
+            });
+        }
     }
-    if (name.length > 100) {
-        return res.status(400).json({ error: 'Name must be less than 100 characters' });
-    }
-    if (description.length > 1000) {
-        return res.status(400).json({ error: 'Description must be less than 1000 characters' });
-    }
-    next();
 };
 
-// API Routes
-app.post('/api/contact', (req, res) => {
-    const { name, email, message } = req.body;
-    
-    // Basic validation
-    if (!name || !email || !message) {
-        return res.status(400).json({ error: 'All fields are required' });
-    }
-    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-        return res.status(400).json({ error: 'Invalid email format' });
-    }
+// Initialize
+const upload = configureFileUpload();
+const db = new Database();
 
-    console.log(`Contact received: Name: ${name}, Email: ${email}, Message: ${message}`);
-    res.json({ success: true });
-});
+// Configure middleware
+configureSecurityMiddleware(app);
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/api/trades', upload.single('image'), validateTradeInput, (req, res) => {
-    const { name, description } = req.body;
-    
-    if (!req.file) {
-        return res.status(400).json({ error: 'Image is required' });
-    }
+// Routes
+app.post('/api/contact', validators.contact, handlers.contact.create);
+app.post('/api/trades', upload.single('image'), validators.trade, handlers.trades.create);
+app.get('/api/trades', handlers.trades.getAll);
+app.put('/api/trades/:id', validators.trade, handlers.trades.update);
+app.delete('/api/trades/:id', handlers.trades.delete);
 
-    const image = `/uploads/${req.file.filename}`;
-    
-    db.run(
-        "INSERT INTO trades (name, description, image) VALUES (?, ?, ?)",
-        [name, description, image],
-        function(err) {
-            if (err) {
-                console.error('Database error:', err);
-                return res.status(500).json({ error: 'Failed to create trade' });
-            }
-            res.json({ id: this.lastID, name, description, image });
-        }
-    );
-});
-
-app.get('/api/trades', (req, res) => {
-    db.all("SELECT * FROM trades ORDER BY created_at DESC", [], (err, rows) => {
-        if (err) {
-            console.error('Database error:', err);
-            return res.status(500).json({ error: 'Failed to fetch trades' });
-        }
-        res.json({ trades: rows });
-    });
-});
-
-app.put('/api/trades/:id', validateTradeInput, (req, res) => {
-    const { id } = req.params;
-    const { name, description } = req.body;
-
-    db.run(
-        "UPDATE trades SET name = ?, description = ? WHERE id = ?",
-        [name, description, id],
-        function(err) {
-            if (err) {
-                console.error('Database error:', err);
-                return res.status(500).json({ error: 'Failed to update trade' });
-            }
-            if (this.changes === 0) {
-                return res.status(404).json({ error: 'Trade not found' });
-            }
-            res.json({ updated: true, id });
-        }
-    );
-});
-
-app.delete('/api/trades/:id', (req, res) => {
-    const { id } = req.params;
-    
-    db.run("DELETE FROM trades WHERE id = ?", id, function(err) {
-        if (err) {
-            console.error('Database error:', err);
-            return res.status(500).json({ error: 'Failed to delete trade' });
-        }
-        if (this.changes === 0) {
-            return res.status(404).json({ error: 'Trade not found' });
-        }
-        res.json({ deleted: true, id });
-    });
-});
-
-// Error handling middleware
+// Error handling
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({ error: 'Something broke!' });
+    res.status(500).json({ error: err.message || 'Something broke!' });
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// Server startup
+const server = app.listen(CONFIG.PORT, () => {
+    console.log(`Server running on port ${CONFIG.PORT}`);
 });
 
-// Cleanup on server shutdown
-process.on('SIGINT', () => {
-    db.close((err) => {
-        if (err) {
-            console.error('Error closing database:', err);
-        } else {
-            console.log('Database connection closed');
-        }
-        process.exit(0);
-    });
-});
+// Graceful shutdown
+const shutdown = async () => {
+    try {
+        await db.close();
+        console.log('Database connection closed');
+        server.close(() => {
+            console.log('Server shut down');
+            process.exit(0);
+        });
+    } catch (err) {
+        console.error('Error during shutdown:', err);
+        process.exit(1);
+    }
+};
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
