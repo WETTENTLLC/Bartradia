@@ -1,177 +1,320 @@
+I'll create an updated version of the Barter Buddies page to maintain consistent Bartradia branding.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barter Buddies - Business Service Exchange</title>
+    <title>Business Service Exchange | Bartradia</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <!-- Existing head content -->
-  <meta name="description" content="Bartradia - A community marketplace for trading and bartering goods and services without using money.">
-  <meta name="keywords" content="barter, trade, exchange, community, marketplace">
-  <meta name="author" content="Bartradia">
-  <meta property="og:title" content="Bartradia - Trade Without Money">
-  <meta property="og:description" content="Join our community of traders and barterers to exchange goods and services without using money.">
-  <meta property="og:image" content="https://bartradia.com/images/logo.png">
-  <meta property="og:url" content="https://bartradia.com">
-  <meta name="twitter:card" content="summary_large_image">
+    <meta name="description" content="Bartradia Business Services - Exchange professional services with verified businesses without using money.">
+    <meta name="keywords" content="barter, trade, exchange, business services, professional services, marketplace">
+    <meta name="author" content="Bartradia">
+    <meta property="og:title" content="Bartradia - Business Service Exchange">
+    <meta property="og:description" content="Join our trusted network of business professionals and trade services to grow together without using money.">
+    <meta property="og:image" content="https://bartradia.com/images/logo.png">
+    <meta property="og:url" content="https://bartradia.com/business-services">
+    <meta name="twitter:card" content="summary_large_image">
 </head>
     
-<body>
+<body class="frame">
     <!-- Header -->
-    <header>
-        <nav class="nav-bar">
+    <header class="hero-banner" role="banner">
+        <div class="nav-bar">
             <div class="brand-container">
-                <img src="logo.png" alt="Barter Buddies Logo" class="main-logo">
-                <h1 class="main-slogan">Barter Buddies</h1>
+                <div class="spinning-container">
+                    <!-- The entire logo image -->
+                    <img src="images/logo-images.png" alt="Logo Images" class="logo-images logo-heart" onerror="this.src='images/fallback.png'; this.alt='Fallback Image';">
+                    <!-- A duplicate of the logo image for the spinning shapes -->
+                    <img src="images/logo-images.png" alt="Logo Images" class="logo-images logo-shapes" onerror="this.src='images/fallback.png'; this.alt='Fallback Image';">
+                </div>
+                <h1 class="main-slogan">Business Exchange</h1>
             </div>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="trade.html">Item Trading</a></li>
-                <li><a href="barter-buddies.html" class="active">Business Services</a></li>
+                <li><a href="business-services.html" class="active">Business Services</a></li>
                 <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
             </ul>
             <div class="auth-buttons">
-                <a href="#" class="btn btn-secondary" id="loginBtn">Login</a>
-                <a href="#" class="btn btn-primary" id="registerBtn">Register Business</a>
+                <a href="sign-in.html" class="btn btn-secondary" id="loginBtn">Sign In</a>
+                <a href="business-registration.html" class="btn btn-primary" id="registerBtn">Register Business</a>
             </div>
-        </nav>
+        </div>
     </header>
 
-    <main>
+    <main role="main">
         <!-- Hero Section -->
-        <section class="hero barter-hero">
+        <section class="hero business-hero">
             <div class="hero-content">
-                <h2>Exchange Professional Services with Verified Businesses</h2>
-                <p>Join our trusted network of business professionals and trade services to grow together</p>
-                <button class="button btn-large" id="getStartedBtn">Get Started</button>
+                <h2>Exchange Professional Services</h2>
+                <p class="slogan">Connect, Collaborate, and Grow with Verified Businesses</p>
+                <button class="cta-button" id="getStartedBtn" onclick="location.href='business-registration.html'">Get Started</button>
             </div>
         </section>
 
         <!-- Featured Services Section -->
-        <section class="featured-services frame">
+        <section class="floating-card featured-services">
             <h2>Featured Business Services</h2>
-            <div class="services-grid">
-                <!-- Service Cards -->
-                <div class="service-card">
-                    <div class="service-header">
-                        <img src="web-design.jpg" alt="Web Design Services" class="service-image">
-                        <span class="verification-badge" title="Verified Business">
-                            <i class="fas fa-check-circle"></i>
-                        </span>
-                    </div>
-                    <div class="service-details">
-                        <h3>Web Design Services</h3>
-                        <p class="business-name">TechCraft Solutions</p>
-                        <p class="service-description">Professional web design and development services</p>
-                        <div class="service-tags">
-                            <span>Web Development</span>
-                            <span>UI/UX</span>
+            <div class="inner-frame">
+                <div class="services-grid">
+                    <!-- Service Card 1 -->
+                    <div class="service-card">
+                        <div class="service-header">
+                            <img src="images/services/web-design.jpg" alt="Web Design Services" class="service-image" onerror="this.src='images/fallback-service.png'; this.alt='Service';">
+                            <span class="verification-badge" title="Verified Business">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
                         </div>
-                        <button class="btn btn-primary">Propose Barter</button>
+                        <div class="service-details">
+                            <h3>Web Design Services</h3>
+                            <p class="business-name">TechCraft Solutions</p>
+                            <p class="service-description">Professional web design and development services for businesses of all sizes. Custom solutions tailored to your needs.</p>
+                            <div class="service-tags">
+                                <span>Web Development</span>
+                                <span>UI/UX</span>
+                            </div>
+                            <div class="hover-action">
+                                <button class="action-link">Propose Barter</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service Card 2 -->
+                    <div class="service-card">
+                        <div class="service-header">
+                            <img src="images/services/marketing.jpg" alt="Digital Marketing" class="service-image" onerror="this.src='images/fallback-service.png'; this.alt='Service';">
+                            <span class="verification-badge" title="Verified Business">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
+                        </div>
+                        <div class="service-details">
+                            <h3>Digital Marketing</h3>
+                            <p class="business-name">Growth Accelerators</p>
+                            <p class="service-description">Comprehensive digital marketing strategies including SEO, social media, and content marketing.</p>
+                            <div class="service-tags">
+                                <span>Marketing</span>
+                                <span>SEO</span>
+                                <span>Social Media</span>
+                            </div>
+                            <div class="hover-action">
+                                <button class="action-link">Propose Barter</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service Card 3 -->
+                    <div class="service-card">
+                        <div class="service-header">
+                            <img src="images/services/accounting.jpg" alt="Accounting Services" class="service-image" onerror="this.src='images/fallback-service.png'; this.alt='Service';">
+                            <span class="verification-badge" title="Verified Business">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
+                        </div>
+                        <div class="service-details">
+                            <h3>Accounting Services</h3>
+                            <p class="business-name">Balance Financial</p>
+                            <p class="service-description">Bookkeeping, tax preparation, and financial consulting for small to medium businesses.</p>
+                            <div class="service-tags">
+                                <span>Accounting</span>
+                                <span>Taxes</span>
+                                <span>Financial</span>
+                            </div>
+                            <div class="hover-action">
+                                <button class="action-link">Propose Barter</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- More service cards... -->
+                
+                <div class="view-all-link">
+                    <a href="all-services.html" class="secondary-link">View All Services <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
         </section>
 
         <!-- How It Works Section -->
-        <section class="how-it-works frame">
-            <h2>How Barter Buddies Works</h2>
-            <div class="steps-container">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <h3>Verify Your Business</h3>
-                    <p>Submit your business credentials for verification</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <h3>List Your Services</h3>
-                    <p>Create detailed listings of services you offer</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <h3>Connect & Barter</h3>
-                    <p>Match with other businesses and propose trades</p>
+        <section class="floating-card how-it-works">
+            <h2>How Business Exchange Works</h2>
+            <div class="inner-frame">
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Verify Your Business</h3>
+                            <p>Submit your business credentials for our verification process to ensure a trusted community of professionals.</p>
+                            <div class="step-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>List Your Services</h3>
+                            <p>Create detailed listings of the professional services your business offers, including your expertise and availability.</p>
+                            <div class="step-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Connect & Barter</h3>
+                            <p>Match with other businesses that offer services you need, propose trades, and grow together through mutual exchange.</p>
+                            <div class="step-icon">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Business Categories -->
-        <section class="business-categories frame">
+        <section class="floating-card business-categories">
             <h2>Browse by Category</h2>
-            <div class="category-grid">
-                <a href="#" class="category-card">
-                    <i class="fas fa-laptop-code"></i>
-                    <h3>Technology</h3>
-                </a>
-                <a href="#" class="category-card">
-                    <i class="fas fa-paint-brush"></i>
-                    <h3>Creative Services</h3>
-                </a>
-                <a href="#" class="category-card">
-                    <i class="fas fa-chart-line"></i>
-                    <h3>Marketing</h3>
-                </a>
-                <!-- More categories... -->
+            <div class="inner-frame">
+                <div class="category-grid">
+                    <a href="category.html?cat=technology" class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h3>Technology</h3>
+                        <p>Web development, IT support, software solutions</p>
+                    </a>
+                    
+                    <a href="category.html?cat=creative" class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-paint-brush"></i>
+                        </div>
+                        <h3>Creative Services</h3>
+                        <p>Design, content creation, photography, video</p>
+                    </a>
+                    
+                    <a href="category.html?cat=marketing" class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Marketing</h3>
+                        <p>Digital marketing, SEO, social media management</p>
+                    </a>
+                    
+                    <a href="category.html?cat=legal" class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <h3>Legal Services</h3>
+                        <p>Contracts, business law, intellectual property</p>
+                    </a>
+                    
+                    <a href="category.html?cat=financial" class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h3>Financial Services</h3>
+                        <p>Accounting, bookkeeping, financial planning</p>
+                    </a>
+                    
+                    <a href="category.html?cat=consulting" class="category-card">
+                        <div class="category-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Consulting</h3>
+                        <p>Business strategy, operations, HR consulting</p>
+                    </a>
+                </div>
+                
+                <div class="view-all-link">
+                    <a href="all-categories.html" class="secondary-link">View All Categories <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
         </section>
 
         <!-- Business Verification -->
-        <section class="business-verification frame">
+        <section class="floating-card business-verification">
             <h2>Business Verification Process</h2>
-            <div class="verification-steps">
-                <div class="verification-step">
-                    <i class="fas fa-file-alt"></i>
-                    <h3>Document Submission</h3>
-                    <p>Business license, registration, and tax documents</p>
+            <div class="inner-frame">
+                <div class="verification-steps">
+                    <div class="verification-step">
+                        <div class="verification-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="verification-content">
+                            <h3>Document Submission</h3>
+                            <p>Submit your business license, registration certificate, and tax documents to begin the verification process.</p>
+                            <ul class="verification-checklist">
+                                <li>Business registration</li>
+                                <li>Tax identification</li>
+                                <li>Professional licenses</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="verification-step">
+                        <div class="verification-icon">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <div class="verification-content">
+                            <h3>Identity Verification</h3>
+                            <p>Verify the identity of business owners and authorized representatives to ensure security.</p>
+                            <ul class="verification-checklist">
+                                <li>Photo identification</li>
+                                <li>Proof of business ownership</li>
+                                <li>Contact verification</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="verification-step">
+                        <div class="verification-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="verification-content">
+                            <h3>Review & Approval</h3>
+                            <p>Our team reviews all submitted documents and verifies your business credentials before approval.</p>
+                            <ul class="verification-checklist">
+                                <li>Document verification</li>
+                                <li>Business reputation check</li>
+                                <li>Verification badge issuance</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="verification-step">
-                    <i class="fas fa-id-card"></i>
-                    <h3>Identity Verification</h3>
-                    <p>Verify business owner identity</p>
-                </div>
-                <div class="verification-step">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>Review & Approval</h3>
-                    <p>Our team reviews and verifies your credentials</p>
+                
+                <div class="verification-cta">
+                    <p>Ready to join our trusted business network?</p>
+                    <button class="cta-button" onclick="location.href='business-registration.html'">Start Verification</button>
                 </div>
             </div>
         </section>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>About Barter Buddies</h4>
-                <ul>
-                    <li><a href="#">Our Mission</a></li>
-                    <li><a href="#">How It Works</a></li>
-                    <li><a href="#">Success Stories</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Resources</h4>
-                <ul>
-                    <li><a href="#">Verification Guide</a></li>
-                    <li><a href="#">Business Tips</a></li>
-                    <li><a href="#">FAQ</a></li>
-                </ul>
-            </div>
-            <!-- More footer sections... -->
-        </div>
-    </footer>
-
-    <!-- Modals -->
-    <div class="modal-overlay" id="verificationModal">
-        <div class="modal">
-            <button class="modal-close">&times;</button>
-            <h2>Business Verification</h2>
-            <!-- Verification form content -->
-        </div>
-    </div>
-
-    <script src="barter-buddies.js"></script>
-</body>
-</html>
+        
+        <!-- Testimonials Section -->
+        <section class="floating-card testimonials">
+            <h2>Success Stories</h2>
+            <div class="inner-frame">
+                <div class="testimonial-slider">
+                    <div class="testimonial">
+                        <div class="testimonial-content">
+                            <p>"Bartradia's Business Exchange has been a game-changer for our startup. We've been able to access professional services we couldn't otherwise afford, and in return, we provide web development to other businesses. It's a win-win!"</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="images/testimonials/sarah.jpg" alt="Sarah J." class="author-image" onerror="this.src='images/fallback-avatar.png'; this.alt='User';">
+                            <div class="author-info">
+                                <h4>Sarah Johnson</h4>
+                                <p>TechStart Solutions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-navigation">
+                    <button class="nav-button prev"><i class="fas fa-chevron-left">
