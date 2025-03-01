@@ -3,42 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile</title>
+    <title>Edit Profile | Bartradia</title>
     <link rel="stylesheet" href="styles.css">
-  <!-- Existing head content -->
-  <meta name="description" content="Bartradia - A community marketplace for trading and bartering goods and services without using money.">
-  <meta name="keywords" content="barter, trade, exchange, community, marketplace">
-  <meta name="author" content="Bartradia">
-  <meta property="og:title" content="Bartradia - Trade Without Money">
-  <meta property="og:description" content="Join our community of traders and barterers to exchange goods and services without using money.">
-  <meta property="og:image" content="https://bartradia.com/images/logo.png">
-  <meta property="og:url" content="https://bartradia.com">
-  <meta name="twitter:card" content="summary_large_image">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Update your Bartradia profile information and preferences.">
+    <meta name="keywords" content="barter, trade, exchange, community, marketplace, profile, settings">
+    <meta name="author" content="Bartradia">
+    <meta property="og:title" content="Edit Your Bartradia Profile">
+    <meta property="og:description" content="Update your account information and preferences on Bartradia - the community marketplace for trading without money.">
+    <meta property="og:image" content="https://bartradia.com/images/logo.png">
+    <meta property="og:url" content="https://bartradia.com/edit-profile">
+    <meta name="twitter:card" content="summary_large_image">
 </head>
-    
 <body>
     <header>
-        <h1>Edit Profile</h1>
+        <div class="nav-bar">
+            <div class="brand-container">
+                <img src="images/logo.png" alt="Bartradia Logo" class="main-logo">
+                <h1 class="main-slogan">Edit Profile</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="trade.html">Trades</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-primary" id="userNameDisplay">User Name</a>
+                <a href="logout.html" class="btn btn-secondary">Logout</a>
+            </div>
+        </div>
     </header>
+
     <main>
-        <section class="edit-profile">
-            <h2>Update Your Information</h2>
-            <form id="editProfileForm" action="/update-profile" method="POST">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+        <section class="floating-card profile-edit">
+            <h2>Update Your Profile</h2>
+            <div class="inner-frame">
+                <form id="editProfileForm" action="/update-profile" method="POST" enctype="multipart/form-data">
+                    <!-- Profile Picture Section -->
+                    <div class="form-section">
+                        <h3>Profile Picture</h3>
+                        <div class="profile-picture-container">
+                            <div class="current-picture">
+                                <img src="images/default-avatar.png" alt="Current Profile Picture" id="currentProfilePic">
+                            </div>
+                            <div class="form-group">
+                                <label for="profilePicture">Upload New Picture:</label>
+                                <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
+                                <span class="hint-text">Recommended size: 300x300px (Max 2MB)</span>
+                            </div>
+                        </div>
+                    </div>
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+                    <!-- Basic Information Section -->
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        <div class="form-group">
+                            <label for="displayName">Display Name:</label>
+                            <input type="text" id="displayName" name="displayName" value="Current User Name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="username">Username:</label>
+                            <input type="text" id="username" name="username" value="current_username" required>
+                            <span class="hint-text">This is your unique identifier on Bartradia</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address:</label>
+                            <input type="email" id="email" name="email" value="user@example.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="location">Location:</label>
+                            <input type="text" id="location" name="location" value="Current Location">
+                            <span class="hint-text">City, State or Region</span>
+                        </div>
+                    </div>
 
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password">
+                    <!-- Password Section -->
+                    <div class="form-section">
+                        <h3>Change Password</h3>
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password:</label>
+                            <input type="password" id="currentPassword" name="currentPassword">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newPassword">New Password:</label>
+                            <input type="password" id="newPassword" name="newPassword">
+                            <span class="hint-text">Must contain at least 8 characters including uppercase, lowercase, and numbers</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password:</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword">
+                        </div>
+                    </div>
 
-                <button type="submit">Update Profile</button>
-            </form>
+                    <!-- Trading Preferences Section -->
+                    <div class="form-section">
+                        <h3>Trading Preferences</h3>
+                        <div class="form-group">
+                            <label for="tradingRadius">Trading Radius (miles):</label>
+                            <input type="number" id="tradingRadius" name="tradingRadius" value="25" min="1" max="500">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Preferred Trading Categories:</label>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="electronics" name="categories[]" value="electronics" checked>
+                                <label for="electronics">Electronics</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="furniture" name="categories[]" value="furniture">
+                                <label for="furniture">Furniture</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="clothing" name="categories[]" value="clothing" checked>
+                                <label for="clothing">Clothing</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="books" name="categories[]" value="books">
+                                <label for="books">Books</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="tools" name="categories[]" value="tools">
+                                <label for="tools">Tools</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="services" name="categories[]" value="services" checked>
+                                <label for="services">Services</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bio">About Me / Trading Bio:</label>
+                            <textarea id="bio" name="bio" rows="4">I'm interested in fair trades and building community connections!</textarea>
+                            <span class="hint-text">Tell others about yourself and what you're looking to trade (max 500 characters)</span>
+                        </div>
+                    </div>
+
+                    <!-- Notification Settings -->
+                    <div class="form-section">
+                        <h3>Notification Preferences</h3>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="emailNotifications" name="emailNotifications" checked>
+                            <label for="emailNotifications">Receive email notifications</label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="tradeAlerts" name="tradeAlerts" checked>
+                            <label for="tradeAlerts">Trade requests and offers</label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="messageAlerts" name="messageAlerts" checked>
+                            <label for="messageAlerts">New messages</label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="newsletterAlerts" name="newsletterAlerts">
+                            <label for="newsletterAlerts">Bartradia newsletter and updates</label>
+                        </div>
+                    </div>
+
+                    <div class="hover-action">
+                        <button type="submit" class="action-link">Save Changes</button>
+                        <a href="profile.html" class="secondary-link">Cancel</a>
+                    </div>
+                </form>
+            </div>
         </section>
     </main>
-    <script src="edit-profile.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Preview uploaded profile picture
+            const profilePictureInput = document.getElementById('profilePicture');
+            const currentProfilePic = document.getElementById('currentProfilePic');
+            
+            profilePictureInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        currentProfilePic.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Form validation
+            const editProfileForm = document.getElementById('editProfileForm');
+            editProfileForm.addEventListener('submit', function(e) {
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (newPassword && newPassword !== confirmPassword) {
+                    e.preventDefault();
+                    alert('New passwords do not match!');
+                }
+                
+                // Additional validation can be added here
+            });
+        });
+    </script>
 </body>
 </html>
-
-
