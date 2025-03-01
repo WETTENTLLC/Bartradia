@@ -129,3 +129,55 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
+function validateForm() {
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const message = document.getElementById("message").value.trim();
+  let isValid = true;
+  
+  // Clear previous error messages
+  clearErrors();
+  
+  // Name validation
+  if (name === "") {
+    displayError("name", "Name must be filled out");
+    isValid = false;
+  }
+  
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (email === "" || !emailRegex.test(email)) {
+    displayError("email", "Please enter a valid email address");
+    isValid = false;
+  }
+  
+  // Message validation
+  if (message === "") {
+    displayError("message", "Please enter your message");
+    isValid = false;
+  }
+  
+  return isValid;
+}
+
+function displayError(fieldId, message) {
+  const field = document.getElementById(fieldId);
+  const errorDiv = document.createElement("div");
+  errorDiv.className = "error-message";
+  errorDiv.innerText = message;
+  errorDiv.style.color = "red";
+  errorDiv.style.fontSize = "12px";
+  errorDiv.style.marginTop = "5px";
+  field.parentNode.insertBefore(errorDiv, field.nextSibling);
+  field.style.borderColor = "red";
+}
+
+function clearErrors() {
+  const errorMessages = document.querySelectorAll(".error-message");
+  errorMessages.forEach(msg => msg.remove());
+  
+  const formInputs = document.querySelectorAll("input, textarea");
+  formInputs.forEach(input => input.style.borderColor = "");
+}
