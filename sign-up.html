@@ -3,124 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sign up for One Man's Trash and start trading valuable items within your community.">
-    <meta name="keywords" content="sign up, trading, community, valuable items, One Man's Trash">
-    <title>Sign Up - One Man's Trash</title>
+    <title>Sign Up | Bartradia</title>
     <link rel="stylesheet" href="styles.css">
-    <head>
-  <!-- Existing head content -->
-  <meta name="description" content="Bartradia - A community marketplace for trading and bartering goods and services without using money.">
-  <meta name="keywords" content="barter, trade, exchange, community, marketplace">
-  <meta name="author" content="Bartradia">
-  <meta property="og:title" content="Bartradia - Trade Without Money">
-  <meta property="og:description" content="Join our community of traders and barterers to exchange goods and services without using money.">
-  <meta property="og:image" content="https://bartradia.com/images/logo.png">
-  <meta property="og:url" content="https://bartradia.com">
-  <meta name="twitter:card" content="summary_large_image">
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Sign up for Bartradia and start trading valuable items within your community without using money.">
+    <meta name="keywords" content="barter, trade, exchange, community, marketplace, sign up">
+    <meta name="author" content="Bartradia">
+    <meta property="og:title" content="Sign Up for Bartradia - Trade Without Money">
+    <meta property="og:description" content="Join our community of traders and barterers to exchange goods and services without using money.">
+    <meta property="og:image" content="https://bartradia.com/images/logo.png">
+    <meta property="og:url" content="https://bartradia.com/sign-up">
+    <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
-    <header class="hero-banner" role="banner">
+    <header>
         <div class="nav-bar">
-            <nav role="navigation" aria-label="Main navigation">
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="user-dashboard.html">Account</a></li>
-                    <li><a href="trade.html">Trade Items</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
-            </nav>
-            <div class="search-bar" role="search">
-                <label for="searchInput" class="visually-hidden">Search items</label>
-                <input type="text" placeholder="Search for items..." id="searchInput" aria-label="Search for items">
-                <button id="searchButton" aria-label="Submit search">Search</button>
+            <div class="brand-container">
+                <img src="images/logo.png" alt="Bartradia Logo" class="main-logo">
+                <h1 class="main-slogan">Join Bartradia</h1>
             </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="trade.html">Trades</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
             <div class="auth-buttons">
-                <button id="signInBtn" onclick="location.href='sign-in.html'">Sign In</button>
-                <button id="signUpBtn" onclick="location.href='sign-up.html'">Sign Up</button>
+                <a href="sign-in.html" class="btn btn-primary">Sign In</a>
+                <a href="sign-up.html" class="btn btn-secondary">Sign Up</a>
             </div>
         </div>
     </header>
 
-    <main role="main">
-        <section class="floating-frame sign-up-frame" aria-labelledby="signUpTitle">
-            <h2 id="signUpTitle">Sign Up</h2>
-            <!-- Update the form tag -->
-            <form id="signUpForm" action="/api/signup" method="POST" enctype="multipart/form-data" onsubmit="return handleSubmit(event)">
-                <!-- Full Name Field -->
-                <div class="floating-frame section">
-                    <div class="form-group">
-                        <label for="fullName">Full Name: <span class="required" aria-label="required">*</span></label>
-                        <input type="text" id="fullName" name="fullName" required aria-required="true" 
-                               pattern="[A-Za-z\s]+" title="Please enter a valid name (letters and spaces only)">
-                        <span id="fullNameError" class="error-message" role="alert"></span>
-                    </div>
-                </div>
-
-                <!-- ID Information Section -->
-                <div class="floating-frame section">
-                    <h3>ID Information</h3>
-                    <div class="form-group">
-                        <label for="idNumber">ID Number: <span class="required" aria-label="required">*</span></label>
-                        <input type="text" id="idNumber" name="idNumber" required aria-required="true"
-                               pattern="[A-Za-z0-9]+" title="Alphanumeric characters only">
-                        <span id="idNumberError" class="error-message" role="alert"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="expDate">Expiration Date: <span class="required" aria-label="required">*</span></label>
-                        <input type="date" id="expDate" name="expDate" required aria-required="true"
-                               min="2025-02-26">
-                    </div>
-                    <div class="form-group">
-                        <label for="dob">Date of Birth: <span class="required" aria-label="required">*</span></label>
-                        <input type="date" id="dob" name="dob" required aria-required="true"
-                               max="2007-02-26">
-                    </div>
-                    <div class="form-group">
-                        <label for="idPhoto">Upload ID Photo: <span class="required" aria-label="required">*</span></label>
-                        <input type="file" id="idPhoto" name="idPhoto" accept="image/*" required aria-required="true"
-                               aria-describedby="photoHint">
-                        <span id="photoHint" class="hint-text">Accepted formats: JPG, PNG, GIF (Max 5MB)</span>
-                    </div>
-                </div>
-
-                <!-- Payment Information Section -->
-                <div class="floating-frame section">
-                    <h3>Payment Information</h3>
-                    <p class="info-text" role="note">Your payment information is needed to cover possible shipping costs for trades and for profile upgrades. Rest assured, this information is secure and will not be shared with third parties.</p>
-                    <div class="form-group">
-                        <label for="cardNumber">Card Number: <span class="required" aria-label="required">*</span></label>
-                        <input type="text" id="cardNumber" name="cardNumber" required aria-required="true"
-                               pattern="[0-9]{16}" maxlength="16" autocomplete="cc-number">
-                        <span id="cardNumberError" class="error-message" role="alert"></span>
-                    </div>
-                    <!-- Rest of your payment fields with similar improvements -->
-                </div>
-
-                <!-- Disclaimer Section -->
-                <div class="floating-frame section">
-                    <h3>Disclaimer</h3>
-                    <div class="form-group">
-                        <div class="disclaimer-container" tabindex="0" role="region" aria-label="Terms and conditions">
-                            <textarea id="disclaimer" name="disclaimer" readonly aria-readonly="true">
-                                <!-- Your existing disclaimer text -->
-                            </textarea>
+    <main>
+        <section class="floating-card sign-up-frame" aria-labelledby="signUpTitle">
+            <h2 id="signUpTitle">Create Your Account</h2>
+            <div class="inner-frame">
+                <form id="signUpForm" action="/api/signup" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                    <!-- Personal Information Section -->
+                    <div class="form-section">
+                        <h3>Personal Information</h3>
+                        <div class="form-group">
+                            <label for="fullName">Full Name: <span class="required" aria-label="required">*</span></label>
+                            <input type="text" id="fullName" name="fullName" required aria-required="true" 
+                                pattern="[A-Za-z\s]+" title="Please enter a valid name (letters and spaces only)">
+                            <span id="fullNameError" class="error-message" role="alert"></span>
                         </div>
-                        <div class="agreement-section">
-                            <label for="agreeName">Type your full name to sign: <span class="required" aria-label="required">*</span></label>
-                            <input type="text" id="agreeName" name="agreeName" required aria-required="true">
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="agreeTerms" name="agreeTerms" required aria-required="true">
-                                <label for="agreeTerms">I agree to the terms and conditions</label>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address: <span class="required" aria-label="required">*</span></label>
+                            <input type="email" id="email" name="email" required aria-required="true">
+                            <span id="emailError" class="error-message" role="alert"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="username">Username: <span class="required" aria-label="required">*</span></label>
+                            <input type="text" id="username" name="username" required aria-required="true"
+                                pattern="[A-Za-z0-9_]+" title="Alphanumeric characters and underscores only">
+                            <span id="usernameError" class="error-message" role="alert"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Password: <span class="required" aria-label="required">*</span></label>
+                            <input type="password" id="password" name="password" required aria-required="true"
+                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+                                title="Must contain at least one number, one uppercase and lowercase letter, and at least 8 characters">
+                            <span id="passwordError" class="error-message" role="alert"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password: <span class="required" aria-label="required">*</span></label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required aria-required="true">
+                            <span id="confirmPasswordError" class="error-message" role="alert"></span>
+                        </div>
+                    </div>
+
+                    <!-- ID Information Section -->
+                    <div class="form-section">
+                        <h3>ID Verification</h3>
+                        <div class="form-group">
+                            <label for="idNumber">ID Number: <span class="required" aria-label="required">*</span></label>
+                            <input type="text" id="idNumber" name="idNumber" required aria-required="true"
+                                pattern="[A-Za-z0-9]+" title="Alphanumeric characters only">
+                            <span id="idNumberError" class="error-message" role="alert"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="expDate">Expiration Date: <span class="required" aria-label="required">*</span></label>
+                            <input type="date" id="expDate" name="expDate" required aria-required="true"
+                                min="2025-03-01">
+                            <span id="expDateError" class="error-message" role="alert"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dob">Date of Birth: <span class="required" aria-label="required">*</span></label>
+                            <input type="date" id="dob" name="dob" required aria-required="true"
+                                max="2007-03-01">
+                            <span id="dobError" class="error-message" role="alert"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="idPhoto">Upload ID Photo: <span class="required" aria-label="required">*</span></label>
+                            <input type="file" id="idPhoto" name="idPhoto" accept="image/*" required aria-required="true"
+                                aria-describedby="photoHint">
+                            <span id="photoHint" class="hint-text">Accepted formats: JPG, PNG, GIF (Max 5MB)</span>
+                            <span id="idPhotoError" class="error-message" role="alert"></span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Information Section -->
+                    <div class="form-section">
+                        <h3>Payment Information</h3>
+                        <p class="info-text" role="note">Your payment information is needed to cover possible shipping costs for trades and for profile upgrades. Rest assured, this information is secure and will not be shared with third parties.</p>
+                        
+                        <div class="form-group">
+                            <label for="cardNumber">Card Number: <span class="required" aria-label="required">*</span></label>
+                            <input type="text" id="cardNumber" name="cardNumber" required aria-required="true"
+                                pattern="[0-9]{16}" maxlength="16" autocomplete="cc-number">
+                            <span id="cardNumberError" class="error-message" role="alert"></span>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group half-width">
+                                <label for="expiryDate">Expiry Date: <span class="required" aria-label="required">*</span></label>
+                                <input type="text" id="expiryDate" name="expiryDate" required aria-required="true"
+                                    placeholder="MM/YY" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" maxlength="5" autocomplete="cc-exp">
+                                <span id="expiryDateError" class="error-message" role="alert"></span>
+                            </div>
+                            
+                            <div class="form-group half-width">
+                                <label for="cvv">CVV: <span class="required" aria-label="required">*</span></label>
+                                <input type="text" id="cvv" name="cvv" required aria-required="true"
+                                    pattern="[0-9]{3,4}" maxlength="4" autocomplete="cc-csc">
+                                <span id="cvvError" class="error-message" role="alert"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nameOnCard">Name on Card: <span class="required" aria-label="required">*</span></label>
+                            <input type="text" id="nameOnCard" name="nameOnCard" required aria-required="true"
+                                autocomplete="cc-name">
+                            <span id="nameOnCardError" class="error-message" role="alert"></span>
+                        </div>
+                    </div>
+
+                    <!-- Disclaimer Section -->
+                    <div class="form-section">
+                        <h3>Terms and Conditions</h3>
+                        <div class="form-group">
+                            <div class="disclaimer-container" tabindex="0" role="region" aria-label="Terms and conditions">
+                                <div class="scrollable-text">
+                                    <p>By signing up for Bartradia, you agree to our Terms of Service and Privacy Policy. You acknowledge that:</p>
+                                    <ol>
+                                        <li>You are at least 18 years old or have parental consent to use this service.</li>
+                                        <li>The information you provided is accurate and complete.</li>
+                                        <li>You will not use the platform for illegal activities or to trade prohibited items.</li>
+                                        <li>You are responsible for the items you list and trade on the platform.</li>
+                                        <li>Bartradia is not responsible for any disputes between users regarding trades.</li>
+                                        <li>Your account may be suspended if you violate our community guidelines.</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            
+                            <div class="agreement-section">
+                                <label for="agreeName">Type your full name to sign: <span class="required" aria-label="required">*</span></label>
+                                <input type="text" id="agreeName" name="agreeName" required aria-required="true">
+                                <span id="agreeNameError" class="error-message" role="alert"></span>
+                                
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="agreeTerms" name="agreeTerms" required aria-required="true">
+                                    <label for="agreeTerms">I agree to the terms and conditions</label>
+                                    <span id="agreeTermsError" class="error-message" role="alert"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <button type="submit" class="cta-button">Sign Up</button>
-            </form>
-            <div id="confirmationMessage" style="display: none;" role="alert" aria-live="polite">
-                <p>Your account information has been submitted and is under review. You will receive an email upon approval. In the meantime, feel free to browse the site. Please note that trading and bartering will be restricted until your account is verified. Thank you for joining One Man's Trash.</p>
+                    <div class="hover-action">
+                        <button type="submit" class="action-link">Create Account</button>
+                    </div>
+                </form>
+                
+                <div id="confirmationMessage" style="display: none;" role="alert" aria-live="polite">
+                    <div class="success-message">
+                        <h3>Thank You for Signing Up!</h3>
+                        <p>Your account information has been submitted and is under review. You will receive an email upon approval. In the meantime, feel free to browse the site. Please note that trading and bartering will be restricted until your account is verified.</p>
+                        <a href="index.html" class="btn btn-primary">Return to Home</a>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -136,7 +206,22 @@
             // Validate full name
             const fullName = document.getElementById('fullName');
             if (!fullName.value.match(/^[A-Za-z\s]+$/)) {
-                document.getElementById('fullNameError').textContent = 'Please enter a valid name';
+                document.getElementById('fullNameError').textContent = 'Please enter a valid name (letters and spaces only)';
+                isValid = false;
+            }
+
+            // Validate password match
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+            if (password.value !== confirmPassword.value) {
+                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+                isValid = false;
+            }
+
+            // Validate agreement name matches full name
+            const agreeName = document.getElementById('agreeName');
+            if (agreeName.value !== fullName.value) {
+                document.getElementById('agreeNameError').textContent = 'Name must match the full name provided above';
                 isValid = false;
             }
 
