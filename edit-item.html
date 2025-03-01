@@ -3,46 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Item</title>
+    <title>Edit Item | Bartradia</title>
     <link rel="stylesheet" href="styles.css">
-  <!-- Existing head content -->
-  <meta name="description" content="Bartradia - A community marketplace for trading and bartering goods and services without using money.">
-  <meta name="keywords" content="barter, trade, exchange, community, marketplace">
-  <meta name="author" content="Bartradia">
-  <meta property="og:title" content="Bartradia - Trade Without Money">
-  <meta property="og:description" content="Join our community of traders and barterers to exchange goods and services without using money.">
-  <meta property="og:image" content="https://bartradia.com/images/logo.png">
-  <meta property="og:url" content="https://bartradia.com">
-  <meta name="twitter:card" content="summary_large_image">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Update your item details on Bartradia - the community marketplace for trading without money.">
+    <meta name="keywords" content="barter, trade, exchange, community, marketplace, edit item">
+    <meta name="author" content="Bartradia">
+    <meta property="og:title" content="Edit Your Item on Bartradia">
+    <meta property="og:description" content="Update your item details on Bartradia - the community marketplace for trading without money.">
+    <meta property="og:image" content="https://bartradia.com/images/logo.png">
+    <meta property="og:url" content="https://bartradia.com/edit-item">
+    <meta name="twitter:card" content="summary_large_image">
 </head>
-
 <body>
     <header>
-        <h1>Edit Item</h1>
+        <div class="nav-bar">
+            <div class="brand-container">
+                <img src="images/logo.png" alt="Bartradia Logo" class="main-logo">
+                <h1 class="main-slogan">Edit Item</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="trade.html">Trades</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="#" class="btn btn-primary" id="userNameDisplay">User Name</a>
+                <a href="logout.html" class="btn btn-secondary">Logout</a>
+            </div>
+        </div>
     </header>
+
     <main>
-        <section class="edit-item">
+        <section class="floating-card item-edit">
             <h2>Update Item Details</h2>
-            <form id="editItemForm" action="/update-item" method="POST">
-                <input type="hidden" id="itemId" name="id">
-                
-                <label for="title">Title:</label>
-                <input type="text" id="title" name="title" required>
+            <div class="inner-frame">
+                <form id="editItemForm" action="/update-item" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" id="itemId" name="id" value="123456">
+                    
+                    <!-- Item Images Section -->
+                    <div class="form-section">
+                        <h3>Item Images</h3>
+                        <div class="item-images-container">
+                            <div class="current-images">
+                                <div class="image-preview">
+                                    <img src="images/item-placeholder.png" alt="Current Item Image" id="currentItemImage1">
+                                    <button type="button" class="remove-image" data-image="1">×</button>
+                                </div>
+                                <div class="image-preview empty">
+                                    <div class="placeholder">+</div>
+                                </div>
+                                <div class="image-preview empty">
+                                    <div class="placeholder">+</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="itemImages">Upload New Images:</label>
+                                <input type="file" id="itemImages" name="itemImages" accept="image/*" multiple>
+                                <span class="hint-text">You can upload up to 5 images (Max 5MB each)</span>
+                            </div>
+                        </div>
+                    </div>
 
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" required></textarea>
+                    <!-- Basic Item Information -->
+                    <div class="form-section">
+                        <h3>Item Details</h3>
+                        <div class="form-group">
+                            <label for="title">Title: <span class="required">*</span></label>
+                            <input type="text" id="title" name="title" value="Vintage Record Player" required>
+                            <span class="hint-text">Be specific and concise (max 100 characters)</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">Description: <span class="required">*</span></label>
+                            <textarea id="description" name="description" rows="5" required>Vintage record player in good working condition. Some minor scratches on the case but plays records perfectly. Includes original dust cover and power cord.</textarea>
+                            <span class="hint-text">Include condition, features, and any flaws (max 1000 characters)</span>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group half-width">
+                                <label for="category">Category: <span class="required">*</span></label>
+                                <select id="category" name="category" required>
+                                    <option value="electronics" selected>Electronics</option>
+                                    <option value="furniture">Furniture</option>
+                                    <option value="clothing">Clothing</option>
+                                    <option value="books">Books</option>
+                                    <option value="tools">Tools</option>
+                                    <option value="services">Services</option>
+                                    <option value="collectibles">Collectibles</option>
+                                    <option value="sports">Sports & Outdoors</option>
+                                    <option value="toys">Toys & Games</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group half-width">
+                                <label for="condition">Condition: <span class="required">*</span></label>
+                                <select id="condition" name="condition" required>
+                                    <option value="new">New</option>
+                                    <option value="like-new">Like New</option>
+                                    <option value="excellent" selected>Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="fair">Fair</option>
+                                    <option value="poor">Poor</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
-                <label for="category">Category:</label>
-                <select id="category" name="category" required>
-                    <option value="electronics">Electronics</option>
-                    <option value="furniture">Furniture</option>
-                    <option value="clothing">Clothing</option>
-                </select>
+                    <!-- Trade Preferences -->
+                    <div class="form-section">
+                        <h3>Trade Preferences</h3>
+                        <div class="form-group">
+                            <label for="estimatedValue">Estimated Value ($): <span class="required">*</span></label>
+                            <input type="number" id="estimatedValue" name="estimatedValue" value="150" min="0" step="1" required>
+                            <span class="hint-text">This helps match you with fair trades</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lookingFor">What You're Looking For:</label>
+                            <textarea id="lookingFor" name="lookingFor" rows="3">I'm interested in trading for audio equipment, vintage electronics, or musical instruments. Open to other offers as well.</textarea>
+                            <span class="hint-text">Describe what you'd like to receive in exchange (optional)</span>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="localOnly" name="localOnly" checked>
+                            <label for="localOnly">Local pickup/delivery only</label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="shippingAvailable" name="shippingAvailable">
+                            <label for="shippingAvailable">Willing to ship (buyer pays shipping)</label>
+                        </div>
+                    </div>
 
-                <button type="submit">Update Item</button>
-            </form>
+                    <!-- Item Availability -->
+                    <div class="form-section">
+                        <h3>Item Availability</h3>
+                        <div class="form-group">
+                            <label for="availability">Availability Status:</label>
+                            <select id="availability" name="availability">
+                                <option value="available" selected>Available Now</option>
+                                <option value="pending">Pending Trade</option>
+                                <option value="reserved">Reserved</option>
+                                <option value="unavailable">Temporarily Unavailable</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="location">Item Location:</label>
+                            <input type="text" id="location" name="location" value="Portland, OR">
+                            <span class="hint-text">City, State or Region</span>
+                        </div>
+                    </div>
+
+                    <div class="hover-action">
+                        <button type="submit" class="action-link">Save Changes</button>
+                        <a href="my-items.html" class="secondary-link">Cancel</a>
+                    </div>
+                </form>
+            </div>
         </section>
     </main>
-    <script src="edit-item.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Preview uploaded item images
+            const itemImagesInput = document.getElementById('itemImages');
+            
+            itemImagesInput.addEventListener('change', function() {
+                const files = this.files;
+                if (files.length > 0) {
+                    // Clear empty placeholders
+                    const emptyPreviews = document.querySelectorAll('.image-preview.empty');
+                    for (let i = 0; i < Math.min(files.length, emptyPreviews.length); i++) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            emptyPreviews[i].innerHTML = `
+                                <img src="${e.target.result}" alt="New Item Image">
+                                <button type="button" class="remove-image">×</button>
+                            `;
+                            emptyPreviews[i].classList.remove('empty');
+                        }
+                        reader.readAsDataURL(files[i]);
+                    }
+                }
+            });
+            
+            // Remove image functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-image')) {
+                    const imagePreview = e.target.closest('.image-preview');
+                    imagePreview.innerHTML = '<div class="placeholder">+</div>';
+                    imagePreview.classList.add('empty');
+                }
+            });
+            
+            // Form validation
+            const editItemForm = document.getElementById('editItemForm');
+            editItemForm.addEventListener('submit', function(e) {
+                const title = document.getElementById('title').value;
+                const description = document.getElementById('description').value;
+                
+                if (title.length > 100) {
+                    e.preventDefault();
+                    alert('Title must be 100 characters or less!');
+                }
+                
+                if (description.length > 1000) {
+                    e.preventDefault();
+                    alert('Description must be 1000 characters or less!');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
