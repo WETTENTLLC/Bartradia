@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>Contact Us | Bartradia</title>
     <link rel="stylesheet" href="styles.css">
-  <!-- Existing head content -->
-  <meta name="description" content="Bartradia - A community marketplace for trading and bartering goods and services without using money.">
-  <meta name="keywords" content="barter, trade, exchange, community, marketplace">
-  <meta name="author" content="Bartradia">
-  <meta property="og:title" content="Bartradia - Trade Without Money">
-  <meta property="og:description" content="Join our community of traders and barterers to exchange goods and services without using money.">
-  <meta property="og:image" content="https://bartradia.com/images/logo.png">
-  <meta property="og:url" content="https://bartradia.com">
-  <meta name="twitter:card" content="summary_large_image">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Contact the Bartradia team for support, feedback, or questions about our trading platform.">
+    <meta name="keywords" content="barter, trade, exchange, community, marketplace, contact, support">
+    <meta name="author" content="Bartradia">
+    <meta property="og:title" content="Contact Bartradia - We're Here to Help">
+    <meta property="og:description" content="Get in touch with the Bartradia team for support, feedback, or questions about our trading platform.">
+    <meta property="og:image" content="https://bartradia.com/images/logo.png">
+    <meta property="og:url" content="https://bartradia.com/contact">
+    <meta name="twitter:card" content="summary_large_image">
 </head>
-
 <body class="frame">
     <header class="hero-banner" role="banner">
         <div class="logo-container">
@@ -29,40 +28,46 @@
         <nav role="navigation">
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="user-dashboard.html">Account</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="trade.html">Trade Items</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
             </ul>
         </nav>
+        <div class="auth-links">
+            <a href="sign-in.html" class="btn-login">Sign In</a>
+            <a href="sign-up.html" class="btn-signup">Sign Up</a>
+        </div>
     </header>
 
     <main role="main">
-        <section class="contact frame">
+        <section class="floating-card contact-frame">
+            <h2>Contact Us</h2>
             <div class="inner-frame">
-                <h2>Contact Us</h2>
-                <p>We'd love to hear from you! Please fill out the form below to get in touch with us.</p>
-                <form id="contactForm">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" required>
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                    <label for="message">Message:</label>
-                    <textarea id="message" name="message" required></textarea>
-                    <button type="submit">Send Message</button>
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <footer role="contentinfo">
-        <p>&copy; 2025 One Man's Trash. All rights reserved.</p>
-        <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
-        <div class="social-media">
-            <a href="#">Facebook</a>
-            <a href="#">Instagram</a>
-            <a href="#">Twitter</a>
-        </div>
-    </footer>
-    <script src="script.js"></script>
-</body>
-</html>
+                <div class="contact-intro">
+                    <p>We'd love to hear from you! Whether you have questions about using Bartradia, want to report an issue, or have suggestions to improve our platform, please fill out the form below.</p>
+                </div>
+                
+                <div class="contact-options">
+                    <div class="contact-option">
+                        <div class="icon-container">
+                            <img src="images/icons/support.png" alt="Support Icon" class="contact-icon">
+                        </div>
+                        <h3>Customer Support</h3>
+                        <p>Need help with your account or a trade? Our support team is ready to assist you.</p>
+                    </div>
+                    
+                    <div class="contact-option">
+                        <div class="icon-container">
+                            <img src="images/icons/feedback.png" alt="Feedback Icon" class="contact-icon">
+                        </div>
+                        <h3>Feedback & Suggestions</h3>
+                        <p>Have ideas to make Bartradia better? We're always looking to improve!</p>
+                    </div>
+                    
+                    <div class="contact-option">
+                        <div class="icon-container">
+                            <img src="images/icons/partnership.png" alt="Partnership Icon" class="contact-icon">
+                        </div>
+                        <h3>Business Inquiries</h3>
+                        <p>Intereste
