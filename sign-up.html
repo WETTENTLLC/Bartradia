@@ -195,49 +195,6 @@
         </section>
     </main>
 
-    <script>
-        function validateForm() {
-            const form = document.getElementById('signUpForm');
-            let isValid = true;
-
-            // Clear previous error messages
-            document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
-
-            // Validate full name
-            const fullName = document.getElementById('fullName');
-            if (!fullName.value.match(/^[A-Za-z\s]+$/)) {
-                document.getElementById('fullNameError').textContent = 'Please enter a valid name (letters and spaces only)';
-                isValid = false;
-            }
-
-            // Validate password match
-            const password = document.getElementById('password');
-            const confirmPassword = document.getElementById('confirmPassword');
-            if (password.value !== confirmPassword.value) {
-                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
-                isValid = false;
-            }
-
-            // Validate agreement name matches full name
-            const agreeName = document.getElementById('agreeName');
-            if (agreeName.value !== fullName.value) {
-                document.getElementById('agreeNameError').textContent = 'Name must match the full name provided above';
-                isValid = false;
-            }
-
-            // Add more validation as needed
-
-            if (isValid) {
-                return displayConfirmation();
-            }
-            return false;
-        }
-
-        function displayConfirmation() {
-            document.getElementById('signUpForm').style.display = 'none';
-            document.getElementById('confirmationMessage').style.display = 'block';
-            return false;
-        }
-    </script>
+    
 </body>
 </html>
