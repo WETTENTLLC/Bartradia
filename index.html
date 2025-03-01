@@ -1,3 +1,6 @@
+I'll integrate the updated design with floating cards and shadow effects while maintaining your current Bartradia branding and content structure. Here's the combined code:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,16 +14,15 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <head>
-  <!-- Existing head content -->
-  <meta name="description" content="Bartradia - A community marketplace for trading and bartering goods and services without using money.">
-  <meta name="keywords" content="barter, trade, exchange, community, marketplace">
-  <meta name="author" content="Bartradia">
-  <meta property="og:title" content="Bartradia - Trade Without Money">
-  <meta property="og:description" content="Join our community of traders and barterers to exchange goods and services without using money.">
-  <meta property="og:image" content="https://bartradia.com/images/logo.png">
-  <meta property="og:url" content="https://bartradia.com">
-  <meta name="twitter:card" content="summary_large_image">
+    
+    <meta name="description" content="Bartradia - A community marketplace for trading and bartering goods and services without using money.">
+    <meta name="keywords" content="barter, trade, exchange, community, marketplace">
+    <meta name="author" content="Bartradia">
+    <meta property="og:title" content="Bartradia - Trade Without Money">
+    <meta property="og:description" content="Join our community of traders and barterers to exchange goods and services without using money.">
+    <meta property="og:image" content="https://bartradia.com/images/logo.png">
+    <meta property="og:url" content="https://bartradia.com">
+    <meta name="twitter:card" content="summary_large_image">
 </head>
     
 <body>
@@ -50,7 +52,8 @@
 
     <main role="main">
         <!-- Hero Section -->
-        <section class="hero frame">
+        <section class="hero floating-card">
+            <div class="hero-content">
                 <h1 class="bounce">Welcome to Bartradia</h1>
                 <p class="hero-text">Join our community of traders and discover the value of sharing resources</p>
                 <a href="user-dashboard.html" class="cta-button">Start Trading Today</a>
@@ -58,10 +61,10 @@
         </section>
 
         <!-- About Section -->
-        <section class="about frame">
+        <section class="about floating-card">
             <h2>About Us</h2>
-            <div class="inner-frame">
-                <div class="about-image-frame">
+            <div class="inner-content">
+                <div class="about-image-container">
                     <img src="images/about-us.jpg" 
                          alt="Community trading in action" 
                          class="about-image" 
@@ -71,13 +74,16 @@
                     <p class="about-text">Welcome to Bartradia—a platform dedicated to fostering community through the exchange of valuable items. Our mission is to create a network where people can support each other, promote sustainable living, and make a positive impact by trading items efficiently. By participating, you not only save money but also contribute to a more connected and resourceful society.</p>
                 </div>
             </div>
+            <div class="hover-action">
+                <a href="comprehensive_description.html" class="action-link">Learn More</a>
+            </div>
         </section>
 
         <!-- Featured Trades Section -->
-        <section class="featured-trades frame">
+        <section class="featured-trades floating-card">
             <h2>Featured Trades</h2>
             <div class="grid-container">
-                <div class="frame">
+                <div class="item-card floating-card">
                     <img src="Public/images/item1.png" alt="Item 1" class="featured-image">
                     <h3>Item 1</h3>
                     <div class="item-details">
@@ -88,55 +94,86 @@
                         <p><strong>Location:</strong> Reno, NV</p>
                     </div>
                 </div>
-                <!-- [Previous items 2-4 content remains exactly the same] -->
+                <div class="item-card floating-card">
+                    <img src="Public/images/item2.png" alt="Item 2" class="featured-image">
+                    <h3>Item 2</h3>
+                    <div class="item-details">
+                        <p><strong>Item:</strong> Item 2</p>
+                        <p><strong>Description:</strong> Description of Item 2</p>
+                        <p><strong>Value:</strong> $200</p>
+                        <p><strong>User:</strong> Jane Smith</p>
+                        <p><strong>Location:</strong> Sparks, NV</p>
+                    </div>
+                </div>
+                <div class="item-card floating-card">
+                    <img src="Public/images/item3.png" alt="Item 3" class="featured-image">
+                    <h3>Item 3</h3>
+                    <div class="item-details">
+                        <p><strong>Item:</strong> Item 3</p>
+                        <p><strong>Description:</strong> Description of Item 3</p>
+                        <p><strong>Value:</strong> $300</p>
+                        <p><strong>User:</strong> Alice Johnson</p>
+                        <p><strong>Location:</strong> Carson City, NV</p>
+                    </div>
+                </div>
+                <div class="item-card floating-card most-valuable-item">
+                    <img src="Public/images/item4.png" alt="Most Valuable Item" class="featured-image" onerror="this.src='images/fallback.png'; this.alt='Fallback Image';">
+                    <h3>Most Valuable Item</h3>
+                    <div class="item-details">
+                        <p><strong>Item:</strong> Most Valuable Item</p>
+                        <p><strong>Description:</strong> Description of Most Valuable Item</p>
+                        <p><strong>Value:</strong> $1000</p>
+                        <p><strong>User:</strong> Bob Williams</p>
+                        <p><strong>Location:</strong> Tahoe, CA</p>
+                    </div>
+                </div>
             </div>
-            <div class="hover-frame">
-                <a href="trade.html">Explore All Trades</a>
+            <div class="hover-action">
+                <a href="trade.html" class="action-link">Explore All Trades</a>
             </div>
         </section>
 
         <!-- Barter Buddies Section -->
-<section class="barter-buddies-preview frame">
-    <div class="section-content">
-        <div class="text-content">
-            <h2>Barter Buddies: Business Service Exchange</h2>
-            <p class="section-description">
-                Connect with verified businesses and trade professional services. Whether you're 
-                a web developer, marketing agency, accountant, or any other service provider, 
-                Barter Buddies helps you grow your business through service exchange.
-            </p>
-            <ul class="feature-list">
-                <li>
-                    <i class="fas fa-check-circle"></i>
-                    Trade services with verified businesses
-                </li>
-                <li>
-                    <i class="fas fa-shield-alt"></i>
-                    Secure business verification system
-                </li>
-                <li>
-                    <i class="fas fa-handshake"></i>
-                    Professional service exchange platform
-                </li>
-            </ul>
-            <div class="cta-buttons">
-                <a href="barter-buddies.html" class="btn btn-primary">Explore Business Services</a>
-                <a href="barter-buddies.html#how-it-works" class="btn btn-secondary">Learn More</a>
+        <section class="barter-buddies-preview floating-card">
+            <div class="section-content">
+                <div class="text-content">
+                    <h2>Barter Buddies: Business Service Exchange</h2>
+                    <p class="section-description">
+                        Connect with verified businesses and trade professional services. Whether you're 
+                        a web developer, marketing agency, accountant, or any other service provider, 
+                        Barter Buddies helps you grow your business through service exchange.
+                    </p>
+                    <ul class="feature-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            Trade services with verified businesses
+                        </li>
+                        <li>
+                            <i class="fas fa-shield-alt"></i>
+                            Secure business verification system
+                        </li>
+                        <li>
+                            <i class="fas fa-handshake"></i>
+                            Professional service exchange platform
+                        </li>
+                    </ul>
+                    <div class="cta-buttons">
+                        <a href="barter-buddies.html" class="btn btn-primary">Explore Business Services</a>
+                        <a href="barter-buddies.html#how-it-works" class="btn btn-secondary">Learn More</a>
+                    </div>
+                </div>
+                <div class="image-content">
+                    <img src="images/barter-buddies-preview.jpg" alt="Business Service Exchange" class="preview-image">
+                </div>
             </div>
-        </div>
-        <div class="image-content">
-            <img src="images/barter-buddies-preview.jpg" alt="Business Service Exchange" class="preview-image">
-        </div>
-    </div>
-</section>
-
+        </section>
 
         <!-- How It Works Section -->
-        <section class="how-it-works frame">
+        <section class="how-it-works floating-card">
             <h2>How Our Credit System Works</h2>
             <img src="Public/images/how-it-works.png" 
                  alt="Credit system diagram" 
-                 class="how-it-works-image" 
+                 class="section-image" 
                  onerror="this.src='images/fallback5.png'">
             <div class="credit-system-content">
                 <p>Users have the opportunity to earn credits through various activities on our platform:</p>
@@ -147,15 +184,18 @@
                     <li><strong>Tracking Credits:</strong> Credits can be tracked in real-time through your account dashboard.</li>
                 </ul>
             </div>
+            <div class="hover-action">
+                <a href="user-dashboard.html" class="action-link">View Account</a>
+            </div>
         </section>
 
-                <!-- User Badges Section -->
-        <section class="user-badges frame">
+        <!-- User Badges Section -->
+        <section class="user-badges floating-card">
             <h2>User Badges</h2>
             <div class="badges-content">
                 <img src="Public/images/user-badges.jpg" 
                      alt="Collection of achievable user badges" 
-                     class="user-badges-image" 
+                     class="section-image" 
                      onerror="this.src='images/fallback3.png'">
                 <div class="badges-description">
                     <p>Our user badges system is designed to make participation fun and rewarding:</p>
@@ -167,13 +207,13 @@
                     </ul>
                 </div>
             </div>
-            <div class="hover-frame">
-                <a href="user-dashboard.html">View Your Badges</a>
+            <div class="hover-action">
+                <a href="user-dashboard.html" class="action-link">View Your Badges</a>
             </div>
         </section>
 
         <!-- Contact Section -->
-        <section class="contact frame">
+        <section class="contact floating-card">
             <h2>Contact Us</h2>
             <div class="contact-content">
                 <p>If you have any questions, feedback, or need assistance, feel free to reach out to us:</p>
@@ -191,8 +231,8 @@
                         Address: 123 Main Street, Reno, NV
                     </li>
                 </ul>
-                <div class="hover-frame">
-                    <a href="contact.html">Get in Touch</a>
+                <div class="hover-action">
+                    <a href="contact.html" class="action-link">Get in Touch</a>
                 </div>
             </div>
         </section>
@@ -253,21 +293,4 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "Bartradia",
-      "url": "https://www.bartradia.com",
-      "logo": "https://www.bartradia.com/images/logo.png",
-      "sameAs": [
-        "https://www.facebook.com/bartradia",
-        "https://www.instagram.com/bartradia",
-        "https://www.twitter.com/bartradia"
-      ],
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+1-555-123-4567",
-        "contactType": "customer service",
-        "email": "support@onemanstrash.com"
-      }
-    }
-    </script>
-</body>
-</html>
-
+      "url
