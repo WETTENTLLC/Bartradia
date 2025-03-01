@@ -3,29 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation</title>
+    <title>Confirmation | Bartradia</title>
     <link rel="stylesheet" href="styles.css">
-  <!-- Existing head content -->
-  <meta name="description" content="Bartradia - A community marketplace for trading and bartering goods and services without using money.">
-  <meta name="keywords" content="barter, trade, exchange, community, marketplace">
-  <meta name="author" content="Bartradia">
-  <meta property="og:title" content="Bartradia - Trade Without Money">
-  <meta property="og:description" content="Join our community of traders and barterers to exchange goods and services without using money.">
-  <meta property="og:image" content="https://bartradia.com/images/logo.png">
-  <meta property="og:url" content="https://bartradia.com">
-  <meta name="twitter:card" content="summary_large_image">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Bartradia - A community marketplace for trading and bartering goods and services without using money.">
+    <meta name="keywords" content="barter, trade, exchange, community, marketplace, confirmation">
+    <meta name="author" content="Bartradia">
+    <meta property="og:title" content="Bartradia - Trade Without Money">
+    <meta property="og:description" content="Join our community of traders and barterers to exchange goods and services without using money.">
+    <meta property="og:image" content="https://bartradia.com/images/logo.png">
+    <meta property="og:url" content="https://bartradia.com">
+    <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body>
-    <header>
-        <h1>Form Submission Confirmation</h1>
+<body class="frame">
+    <header class="hero-banner" role="banner">
+        <div class="logo-container">
+            <div class="spinning-container">
+                <!-- The entire logo image -->
+                <img src="images/logo-images.png" alt="Logo Images" class="logo-images logo-heart" onerror="this.src='images/fallback.png'; this.alt='Fallback Image';">
+                <!-- A duplicate of the logo image for the spinning shapes -->
+                <img src="images/logo-images.png" alt="Logo Images" class="logo-images logo-shapes" onerror="this.src='images/fallback.png'; this.alt='Fallback Image';">
+            </div>
+        </div>
+        <nav role="navigation">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="trade.html">Trade Items</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
     </header>
-    <main>
-        <section class="confirmation">
-            <h2>Your form has been successfully submitted!</h2>
-            <p>Thank you for signing up / posting your item / logging in.</p>
-            <button onclick="location.href='index.html'">Go to Home</button>
+
+    <main role="main">
+        <section class="floating-card confirmation-card">
+            <div class="inner-frame">
+                <div class="confirmation-icon">
+                    <img src="images/icons/success.png" alt="Success" onerror="this.innerHTML='✓'; this.classList.add('fallback-icon');">
+                </div>
+                
+                <h2>Success!</h2>
+                <p class="confirmation-message">Your submission has been received.</p>
+                
+                <div class="confirmation-details" id="confirmationDetails">
+                    <!-- Dynamic content will be inserted here by JavaScript -->
+                    <p>Thank you for being part of the Bartradia community. Your action has been completed successfully.</p>
+                </div>
+                
+                <div class="confirmation-actions">
+                    <a href="dashboard.html" class="action-link">Go to Dashboard</a>
+                    <a href="index.html" class="action-link secondary">Return to Home</a>
+                </div>
+                
+                <div class="next-steps">
+                    <h3>What's Next?</h3>
+                    <ul>
+                        <li>Explore available items for trade</li>
+                        <li>Complete your profile to improve matching</li>
+                        <li>Post more items to increase your trading options</li>
+                    </ul>
+                </div>
+            </div>
         </section>
     </main>
+
+    <footer role="contentinfo">
+        <p>&copy; 2025 Bartradia. All rights reserved.</p>
+        <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
+        <div class="social-media">
+            <a href="#" aria-label="Facebook">Facebook</a>
+            <a href="#" aria-label="Instagram">Instagram</a>
+            <a href="#" aria-label="Twitter">Twitter</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get URL parameters to customize confirmation message
+            const urlParams = new URLSearchParams(window.location.search);
+            const action = urlParams.get('action');
+            const detailsElement = document.getElementById('confirmationDetails');
+            
+            // Set specific confirmation messages based on the action
+            if (action === 'signup') {
+                document.querySelector('.confirmation-message').textContent = 'Your account has been created!';
+                detailsElement.innerHTML = `
+                    <p>Welcome to Bartradia! Your account has been successfully created. You're now ready to start trading.</p>
+                    <p>We've sent a verification email to your registered address. Please verify your email to unlock all features.</p>
+                `;
+            } else if (action === 'item-post') {
+                document.querySelector('.confirmation-message').textContent = 'Your item has been posted!';
+                detailsElement.innerHTML = `
+                    <p>Your item is now live on Bartradia and visible to potential traders.</p>
+                    <p>You'll receive notifications when someone expresses interest in your item.</p>
+                `;
+            } else if (action === 'login') {
+                document.querySelector('.confirmation-message').textContent = 'You are now logged in!';
+                detailsElement.innerHTML = `
+                    <p>Welcome back to Bartradia! You're now logged in and ready to continue trading.</p>
+                    <p>Check your dashboard for any new trade requests or messages.</p>
+                `;
+            } else if (action === 'contact') {
+                document.querySelector('.confirmation-message').textContent = 'Your message has been sent!';
+                detailsElement.innerHTML = `
+                    <p>Thank you for contacting us. We've received your message and will respond shortly.</p>
+                    <p>Please allow 24-48 hours for a response.</p>
+                `;
+            }
+            
+            // Update the next steps based on action
+            const nextStepsList = document.querySelector('.next-steps ul');
+            if (action === 'signup') {
+                nextStepsList.innerHTML = `
+                    <li>Complete your profile with a photo and bio</li>
+                    <li>Add your first item to start trading</li>
+                    <li>Explore available items in your area</li>
+                `;
+            } else if (action === 'item-post') {
+                nextStepsList.innerHTML = `
+                    <li>Add more details to improve visibility</li>
+                    <li>Browse other items to find potential trades</li>
+                    <li>Share your listing on social media</li>
+                `;
+            }
+        });
+    </script>
 </body>
 </html>
