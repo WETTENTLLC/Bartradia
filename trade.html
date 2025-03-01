@@ -3,136 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trade Room</title>
+    <title>Trade Room | Bartradia</title>
     <link rel="stylesheet" href="styles.css">
-    <head>
-  <!-- Existing head content -->
-  <meta name="description" content="Bartradia - A community marketplace for trading and bartering goods and services without using money.">
-  <meta name="keywords" content="barter, trade, exchange, community, marketplace">
-  <meta name="author" content="Bartradia">
-  <meta property="og:title" content="Bartradia - Trade Without Money">
-  <meta property="og:description" content="Join our community of traders and barterers to exchange goods and services without using money.">
-  <meta property="og:image" content="https://bartradia.com/images/logo.png">
-  <meta property="og:url" content="https://bartradia.com">
-  <meta name="twitter:card" content="summary_large_image">
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Bartradia - A community marketplace for trading and bartering goods and services without using money.">
+    <meta name="keywords" content="barter, trade, exchange, community, marketplace">
+    <meta name="author" content="Bartradia">
+    <meta property="og:title" content="Bartradia - Trade Without Money">
+    <meta property="og:description" content="Join our community of traders and barterers to exchange goods and services without using money.">
+    <meta property="og:image" content="https://bartradia.com/images/logo.png">
+    <meta property="og:url" content="https://bartradia.com">
+    <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
     <header>
-        <h1>Trade Room</h1>
-        <nav class="nav-bar">
-            <ul>
+        <div class="nav-bar">
+            <div class="brand-container">
+                <img src="images/logo.png" alt="Bartradia Logo" class="main-logo">
+                <h1 class="main-slogan">Trade Room</h1>
+            </div>
+            <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="trade.html">Trades</a></li>
                 <li><a href="profile.html">Profile</a></li>
                 <li><a href="settings.html">Settings</a></li>
             </ul>
-        </nav>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-primary">Login</a>
+                <a href="signup.html" class="btn btn-secondary">Sign Up</a>
+            </div>
+        </div>
     </header>
+    
     <main>
-        <section class="notifications">
+        <section class="notifications floating-card">
             <h2>Notifications</h2>
-            <p>New trade alerts, new bartering alerts...</p>
+            <div class="inner-frame">
+                <p>New trade alerts, new bartering alerts...</p>
+                <div class="hover-frame">
+                    <p>Click to view all notifications</p>
+                </div>
+            </div>
+            <div class="hover-action">
+                <a href="#" class="action-link">View All</a>
+            </div>
         </section>
-        <section class="search-filter">
+        
+        <section class="search-filter floating-card">
             <h2>Search Filter</h2>
-            <form>
-                <label for="city">City:</label>
-                <input type="text" id="city" name="city">
-                <label for="item-type">Item Type:</label>
-                <input type="text" id="item-type" name="item-type">
-                <label for="category">Category:</label>
-                <select id="category" name="category">
-                    <option value="all">All</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="furniture">Furniture</option>
-                    <option value="clothing">Clothing</option>
-                    <!-- Add more categories as needed -->
-                </select>
-                <button type="submit">Search</button>
-            </form>
+            <div class="inner-frame">
+                <form>
+                    <label for="city">City:</label>
+                    <input type="text" id="city" name="city">
+                    
+                    <label for="item-type">Item Type:</label>
+                    <input type="text" id="item-type" name="item-type">
+                    
+                    <label for="category">Category:</label>
+                    <select id="category" name="category">
+                        <option value="all">All</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="clothing">Clothing</option>
+                        <!-- Add more categories as needed -->
+                    </select>
+                    
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
         </section>
+        
         <section class="dashboard-grid">
-            <div class="floating-frame trade-items">
+            <div class="floating-card trade-items">
                 <h2>Items for Trade</h2>
-                <div class="scrollable-list">
-                    <div class="trade-item" data-category="electronics">
-                        <h3>Item 1 (Electronics)</h3>
-                        <p>Description of item 1...</p>
-                    </div>
-                    <div class="trade-item" data-category="furniture">
-                        <h3>Item 2 (Furniture)</h3>
-                        <p>Description of item 2...</p>
-                    </div>
-                    <div class="trade-item" data-category="clothing">
-                        <h3>Item 3 (Clothing)</h3>
-                        <p>Description of item 3...</p>
+                <div class="inner-frame">
+                    <div class="scrollable-list">
+                        <div class="trade-item" data-category="electronics">
+                            <h3>Item 1 (Electronics)</h3>
+                            <p>Description of item 1...</p>
+                            <div class="hover-action">
+                                <a href="#" class="action-link">View Details</a>
+                            </div>
+                        </div>
+                        <div class="trade-item" data-category="furniture">
+                            <h3>Item 2 (Furniture)</h3>
+                            <p>Description of item 2...</p>
+                            <div class="hover-action">
+                                <a href="#" class="action-link">View Details</a>
+                            </div>
+                        </div>
+                        <div class="trade-item" data-category="clothing">
+                            <h3>Item 3 (Clothing)</h3>
+                            <p>Description of item 3...</p>
+                            <div class="hover-action">
+                                <a href="#" class="action-link">View Details</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
+        
         <section class="dashboard-grid">
-            <div class="floating-frame">
+            <div class="floating-card">
                 <div class="widget favorite-items">
                     <h2>Favorite Items</h2>
-                    <div class="scrollable-list">
-                        <!-- Favorite items will be listed here -->
+                    <div class="inner-frame">
+                        <div class="scrollable-list">
+                            <!-- Favorite items will be listed here -->
+                            <p>No favorite items yet. Click the heart icon on items to add them here.</p>
+                        </div>
+                        <div class="hover-action">
+                            <a href="#" class="action-link">Manage Favorites</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="floating-frame">
+            
+            <div class="floating-card">
                 <div class="widget post-item">
                     <h2>Post an Item to Trade</h2>
-                    <form>
-                        <label for="item-description">Item Description:</label>
-                        <textarea id="item-description" name="item-description"></textarea>
-                        <button type="submit">Submit</button>
-                    </form>
+                    <div class="inner-frame">
+                        <form>
+                            <label for="item-description">Item Description:</label>
+                            <textarea id="item-description" name="item-description"></textarea>
+                            <div class="hover-action">
+                                <button type="submit" class="action-link">Submit</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
+    
     <script src="script.js"></script>
-</body>
-</html>
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post an Item for Trade</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <h1>Post an Item for Trade</h1>
-    </header>
-    <main>
-        <section class="post-item">
-            <h2>New Trade Item</h2>
-            <form id="postItemForm" action="/post-item" method="POST" enctype="multipart/form-data">
-                <label for="title">Title:</label>
-                <input type="text" id="title" name="title" required>
-
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" required></textarea>
-
-                <label for="category">Category:</label>
-                <select id="category" name="category" required>
-                    <option value="electronics">Electronics</option>
-                    <option value="furniture">Furniture</option>
-                    <option value="clothing">Clothing</option>
-                </select>
-
-                <label for="image">Image:</label>
-                <input type="file" id="image" name="image" accept="image/*" required>
-
-                <button type="submit">Post Item</button>
-            </form>
-        </section>
-    </main>
 </body>
 </html>
